@@ -1,5 +1,10 @@
 # 🐿️ lis
 
+[![build](https://github.com/tamada/lis/actions/workflows/build.yaml/badge.svg)](https://github.com/tamada/lis/actions/workflows/build.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/tamada/lis/badge.svg?branch=main)](https://coveralls.io/github/tamada/lis?branch=main)
+
+[![CC-0](https://img.shields.io/badge/License-CC--0-blue.svg)](https://github.com/tamada/lis/blob/main/LICENSE)
+
 Minimal and alternative `ls` implementation in Rust.
 This product is an example project for learning Rust and the development process of open source software.
 It is not intended for production use.
