@@ -5,6 +5,7 @@ use std::os::unix::fs::{MetadataExt, PermissionsExt};
 use chrono::{DateTime, Local};
 use uzers::{get_group_by_gid, get_user_by_uid};
 use nix::sys::stat::Mode;
+use clap::ValueEnum;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Entry {
@@ -19,6 +20,15 @@ pub struct Entry {
     pub modified: String,
     pub git_status: String,
     pub extension: String,
+}
+
+#[derive(ValueEnum, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum SortBy {
+    Name,
+    Time,
+    Size,
+    Extension,
 }
 
 impl Entry {
@@ -41,6 +51,22 @@ impl Entry {
             extension: path.extension().and_then(|e| e.to_str()).unwrap_or("").to_string(),
         })
     }
+}
+
+pub fn sort_entries(entries: &mut [Entry], sort_by: SortBy, reverse: bool) {
+    entries.sort_by(|a, b| {
+        let cmp = match sort_by {
+            SortBy::Name => a.name.cmp(&b.name),
+            SortBy::Time => a.modified.cmp(&b.modified),
+            SortBy::Size => a.size.cmp(&b.size),
+            SortBy::Extension => a.extension.cmp(&b.extension),
+        };
+        if reverse {
+            cmp.reverse()
+        } else {
+            cmp
+        }
+    });
 }
 
 fn get_owner_name(uid: u32) -> String {

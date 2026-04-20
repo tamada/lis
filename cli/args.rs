@@ -1,6 +1,6 @@
 use clap::{Parser, ValueEnum};
-use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use lis::entry::SortBy;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -40,15 +40,6 @@ pub struct Args {
     /// Recursive listing
     #[arg(short = 'R', long)]
     pub recursive: bool,
-}
-
-#[derive(ValueEnum, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum SortBy {
-    Name,
-    Time,
-    Size,
-    Extension,
 }
 
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq)]
