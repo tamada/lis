@@ -26,59 +26,69 @@ impl Entry {
         let metadata = fs::symlink_metadata(path).ok()?;
         let is_dir = metadata.is_dir();
         let is_symlink = metadata.file_type().is_symlink();
-        let mode = get_mode_string(metadata.permissions().mode(), is_dir, is_symlink);
-        let nlink = metadata.nlink();
-        let owner = get_user_by_uid(metadata.uid())
-            .map(|u| u.name().to_string_lossy().into_owned())
-            .unwrap_or_else(|| metadata.uid().to_string());
-        let group = get_group_by_gid(metadata.gid())
-            .map(|g| g.name().to_string_lossy().into_owned())
-            .unwrap_or_else(|| metadata.gid().to_string());
-        let size = metadata.len();
-        let modified: DateTime<Local> = metadata.modified().unwrap_or_else(|_| std::time::SystemTime::now()).into();
-        let modified_str = modified.format("%Y-%m-%d %H:%M").to_string();
-        let extension = path.extension().and_then(|e| e.to_str()).unwrap_or("").to_string();
-
+        
         Some(Entry {
             name,
             path: path.to_path_buf(),
             is_dir,
-            mode,
-            nlink,
-            owner,
-            group,
-            size,
-            modified: modified_str,
+            mode: get_mode_string(metadata.permissions().mode(), is_dir, is_symlink),
+            nlink: metadata.nlink(),
+            owner: get_owner_name(metadata.uid()),
+            group: get_group_name(metadata.gid()),
+            size: metadata.len(),
+            modified: get_modified_time(&metadata),
             git_status,
-            extension,
+            extension: path.extension().and_then(|e| e.to_str()).unwrap_or("").to_string(),
         })
     }
 }
 
+fn get_owner_name(uid: u32) -> String {
+    get_user_by_uid(uid)
+        .map(|u| u.name().to_string_lossy().into_owned())
+        .unwrap_or_else(|| uid.to_string())
+}
+
+fn get_group_name(gid: u32) -> String {
+    get_group_by_gid(gid)
+        .map(|g| g.name().to_string_lossy().into_owned())
+        .unwrap_or_else(|| gid.to_string())
+}
+
+fn get_modified_time(metadata: &fs::Metadata) -> String {
+    let modified: DateTime<Local> = metadata.modified()
+        .unwrap_or_else(|_| std::time::SystemTime::now())
+        .into();
+    modified.format("%Y-%m-%d %H:%M").to_string()
+}
+
 fn get_mode_string(mode: u32, is_dir: bool, is_symlink: bool) -> String {
     let mut s = String::with_capacity(10);
-
-    if is_dir {
-        s.push('d');
-    } else if is_symlink {
-        s.push('l');
-    } else {
-        s.push('-');
-    }
+    s.push(get_file_type_char(is_dir, is_symlink));
 
     #[cfg(unix)]
     {
         let m = Mode::from_bits_truncate(mode as nix::sys::stat::mode_t);
-        s.push(if m.contains(Mode::S_IRUSR) { 'r' } else { '-' });
-        s.push(if m.contains(Mode::S_IWUSR) { 'w' } else { '-' });
-        s.push(if m.contains(Mode::S_IXUSR) { 'x' } else { '-' });
-        s.push(if m.contains(Mode::S_IRGRP) { 'r' } else { '-' });
-        s.push(if m.contains(Mode::S_IWGRP) { 'w' } else { '-' });
-        s.push(if m.contains(Mode::S_IXGRP) { 'x' } else { '-' });
-        s.push(if m.contains(Mode::S_IROTH) { 'r' } else { '-' });
-        s.push(if m.contains(Mode::S_IWOTH) { 'w' } else { '-' });
-        s.push(if m.contains(Mode::S_IXOTH) { 'x' } else { '-' });
+        s.push_str(&get_permissions_string(m));
     }
+    s
+}
 
+fn get_file_type_char(is_dir: bool, is_symlink: bool) -> char {
+    if is_dir { 'd' } else if is_symlink { 'l' } else { '-' }
+}
+
+#[cfg(unix)]
+fn get_permissions_string(m: Mode) -> String {
+    let mut s = String::with_capacity(9);
+    s.push(if m.contains(Mode::S_IRUSR) { 'r' } else { '-' });
+    s.push(if m.contains(Mode::S_IWUSR) { 'w' } else { '-' });
+    s.push(if m.contains(Mode::S_IXUSR) { 'x' } else { '-' });
+    s.push(if m.contains(Mode::S_IRGRP) { 'r' } else { '-' });
+    s.push(if m.contains(Mode::S_IWGRP) { 'w' } else { '-' });
+    s.push(if m.contains(Mode::S_IXGRP) { 'x' } else { '-' });
+    s.push(if m.contains(Mode::S_IROTH) { 'r' } else { '-' });
+    s.push(if m.contains(Mode::S_IWOTH) { 'w' } else { '-' });
+    s.push(if m.contains(Mode::S_IXOTH) { 'x' } else { '-' });
     s
 }
