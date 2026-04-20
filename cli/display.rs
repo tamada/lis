@@ -1,4 +1,4 @@
-use crate::entry::Entry;
+use lis::entry::Entry;
 use lscolors::LsColors;
 use terminal_size::{terminal_size, Width};
 use unicode_width::UnicodeWidthStr;

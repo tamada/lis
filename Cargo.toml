@@ -19,3 +19,7 @@ terminal_size = "0.4"
 unicode-width = "0.2"
 colored = "2.1"
 nix = { version = "0.29", features = ["fs", "user"] }
+
+[[bin]]
+name = "lis"
+path = "cli/main.rs"

@@ -1,12 +1,10 @@
 mod args;
 mod display;
-mod entry;
-mod git;
 
 use args::{Args, Format, SortBy};
 use clap::Parser;
-use entry::Entry;
-use git::get_git_statuses;
+use lis::entry::Entry;
+use lis::git::get_git_statuses;
 use ignore::{Walk, WalkBuilder};
 use lscolors::LsColors;
 use std::collections::HashMap;
