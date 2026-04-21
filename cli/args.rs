@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn test_args_default() {
-        let args = Args::try_parse_from(&["lis"]).unwrap();
+        let args = Args::try_parse_from(["lis"]).unwrap();
         assert_eq!(args.path, PathBuf::from("."));
         assert_eq!(args.sort, SortBy::Name);
         assert!(!args.reverse);
@@ -68,7 +68,10 @@ mod tests {
 
     #[test]
     fn test_args_custom() {
-        let args = Args::try_parse_from(&["lis", "src", "--sort", "size", "-r", "-l", "-a", "--icon", "--format", "json", "-R"]).unwrap();
+        let args = Args::try_parse_from([
+            "lis", "src", "--sort", "size", "-r", "-l", "-a", "--icon", "--format", "json", "-R",
+        ])
+        .unwrap();
         assert_eq!(args.path, PathBuf::from("src"));
         assert_eq!(args.sort, SortBy::Size);
         assert!(args.reverse);
