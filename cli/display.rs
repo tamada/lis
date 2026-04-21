@@ -113,3 +113,18 @@ pub fn get_icon(_name: &str, is_dir: bool, ext: &str) -> &'static str {
         _ => "\u{f15b}",
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_icon() {
+        assert_eq!(get_icon("main.rs", false, "rs"), "\u{e7a8}");
+        assert_eq!(get_icon("README.md", false, "md"), "\u{f48a}");
+        assert_eq!(get_icon("Cargo.toml", false, "toml"), "\u{f013}");
+        assert_eq!(get_icon("src", true, ""), "\u{f115}");
+        assert_eq!(get_icon("unknown", false, "unknown"), "\u{f15b}");
+    }
+}
+

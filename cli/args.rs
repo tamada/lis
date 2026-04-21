@@ -49,3 +49,34 @@ pub enum Format {
     Json,
     Yaml,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_args_default() {
+        let args = Args::try_parse_from(&["lis"]).unwrap();
+        assert_eq!(args.path, PathBuf::from("."));
+        assert_eq!(args.sort, SortBy::Name);
+        assert!(!args.reverse);
+        assert!(!args.long);
+        assert!(!args.all);
+        assert!(!args.whole_all);
+        assert_eq!(args.format, Format::Plain);
+    }
+
+    #[test]
+    fn test_args_custom() {
+        let args = Args::try_parse_from(&["lis", "src", "--sort", "size", "-r", "-l", "-a", "--icon", "--format", "json", "-R"]).unwrap();
+        assert_eq!(args.path, PathBuf::from("src"));
+        assert_eq!(args.sort, SortBy::Size);
+        assert!(args.reverse);
+        assert!(args.long);
+        assert!(args.all);
+        assert!(args.icon);
+        assert_eq!(args.format, Format::Json);
+        assert!(args.recursive);
+    }
+}
+
