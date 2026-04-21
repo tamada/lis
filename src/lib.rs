@@ -1,3 +1,7 @@
+//! `lis` is a library and CLI tool for listing directory entries.
+//!
+//! It provides features like Git status, icons, and multiple output formats.
+
 pub mod entry;
 pub mod git;
 
@@ -7,6 +11,7 @@ use ignore::{Walk, WalkBuilder};
 use std::fs;
 use std::path::{Path, PathBuf};
 
+/// The main entry point for listing directory contents.
 pub struct Lis {
     path: PathBuf,
     recursive: bool,
@@ -15,6 +20,7 @@ pub struct Lis {
 }
 
 impl Lis {
+    /// Creates a new `Lis` instance for the given path.
     pub fn new(path: PathBuf) -> Self {
         Self {
             path,
@@ -24,21 +30,25 @@ impl Lis {
         }
     }
 
+    /// Sets whether to list entries recursively.
     pub fn recursive(mut self, recursive: bool) -> Self {
         self.recursive = recursive;
         self
     }
 
+    /// Sets whether to list hidden entries while respecting `.gitignore`.
     pub fn all(mut self, all: bool) -> Self {
         self.all = all;
         self
     }
 
+    /// Sets whether to list all entries, ignoring `.gitignore`.
     pub fn whole_all(mut self, whole_all: bool) -> Self {
         self.whole_all = whole_all;
         self
     }
 
+    /// Lists the entries in the directory according to the configured options.
     pub fn list(&self) -> Vec<Entry> {
         let git_statuses = get_git_statuses(&self.path);
         let mut entries = Vec::new();
@@ -54,6 +64,7 @@ impl Lis {
         entries
     }
 
+    /// Creates a walker based on the current configuration.
     fn create_walker(&self) -> Walk {
         let mut builder = WalkBuilder::new(&self.path);
         builder.hidden(!self.all && !self.whole_all);
@@ -62,6 +73,7 @@ impl Lis {
         builder.build()
     }
 
+    /// Processes a single directory entry and converts it to an `Entry` struct.
     fn process_dir_entry(
         &self,
         dir_entry: &ignore::DirEntry,
@@ -79,6 +91,7 @@ impl Lis {
         Entry::new(path, name, git_status)
     }
 
+    /// Determines the display name for a directory entry based on whether listing is recursive.
     fn get_display_name(&self, path: &Path, dir_entry: &ignore::DirEntry) -> Option<String> {
         if self.recursive {
             match path.strip_prefix(&self.path) {

@@ -7,31 +7,49 @@ use uzers::{get_group_by_gid, get_user_by_uid};
 use nix::sys::stat::Mode;
 use clap::ValueEnum;
 
+/// Represents a single directory entry with its metadata.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Entry {
+    /// The display name of the entry.
     pub name: String,
+    /// The full path to the entry.
     pub path: PathBuf,
+    /// Whether the entry is a directory.
     pub is_dir: bool,
+    /// The file mode string (e.g., "-rw-r--r--").
     pub mode: String,
+    /// The number of hard links to the entry.
     pub nlink: u64,
+    /// The name of the owner.
     pub owner: String,
+    /// The name of the group.
     pub group: String,
+    /// The size of the entry in bytes.
     pub size: u64,
+    /// The last modification time string.
     pub modified: String,
+    /// The Git status of the entry (e.g., "M", "A", or " ").
     pub git_status: String,
+    /// The file extension.
     pub extension: String,
 }
 
+/// Available sorting options for directory entries.
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SortBy {
+    /// Sort by name (ascending).
     Name,
+    /// Sort by last modification time (ascending).
     Time,
+    /// Sort by size in bytes (ascending).
     Size,
+    /// Sort by file extension (ascending).
     Extension,
 }
 
 impl Entry {
+    /// Creates a new `Entry` instance by reading metadata from the filesystem.
     pub fn new(path: &Path, name: String, git_status: String) -> Option<Self> {
         let metadata = fs::symlink_metadata(path).ok()?;
         let is_dir = metadata.is_dir();
@@ -53,6 +71,7 @@ impl Entry {
     }
 }
 
+/// Sorts the given slice of entries based on the specified criteria.
 pub fn sort_entries(entries: &mut [Entry], sort_by: SortBy, reverse: bool) {
     entries.sort_by(|a, b| {
         let cmp = match sort_by {
@@ -69,18 +88,21 @@ pub fn sort_entries(entries: &mut [Entry], sort_by: SortBy, reverse: bool) {
     });
 }
 
+/// Retrieves the owner name for the given UID.
 fn get_owner_name(uid: u32) -> String {
     get_user_by_uid(uid)
         .map(|u| u.name().to_string_lossy().into_owned())
         .unwrap_or_else(|| uid.to_string())
 }
 
+/// Retrieves the group name for the given GID.
 fn get_group_name(gid: u32) -> String {
     get_group_by_gid(gid)
         .map(|g| g.name().to_string_lossy().into_owned())
         .unwrap_or_else(|| gid.to_string())
 }
 
+/// Retrieves the last modification time of the given metadata as a formatted string.
 fn get_modified_time(metadata: &fs::Metadata) -> String {
     let modified: DateTime<Local> = metadata.modified()
         .unwrap_or_else(|_| std::time::SystemTime::now())
@@ -88,6 +110,7 @@ fn get_modified_time(metadata: &fs::Metadata) -> String {
     modified.format("%Y-%m-%d %H:%M").to_string()
 }
 
+/// Constructs a file mode string for the given metadata.
 fn get_mode_string(mode: u32, is_dir: bool, is_symlink: bool) -> String {
     let mut s = String::with_capacity(10);
     s.push(get_file_type_char(is_dir, is_symlink));
@@ -100,10 +123,12 @@ fn get_mode_string(mode: u32, is_dir: bool, is_symlink: bool) -> String {
     s
 }
 
+/// Returns the file type character ('d', 'l', or '-') for the entry.
 fn get_file_type_char(is_dir: bool, is_symlink: bool) -> char {
     if is_dir { 'd' } else if is_symlink { 'l' } else { '-' }
 }
 
+/// Constructs the permissions part of the mode string.
 #[cfg(unix)]
 fn get_permissions_string(m: Mode) -> String {
     let mut s = String::with_capacity(9);
