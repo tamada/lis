@@ -11,15 +11,14 @@ pub fn get_git_statuses(path: &Path) -> HashMap<PathBuf, String> {
     if let Ok(repo) = Repository::discover(path) {
         let mut opts = StatusOptions::new();
         opts.include_untracked(true);
-        if let Ok(repo_statuses) = repo.statuses(Some(&mut opts)) {
-            if let Some(workdir) = repo.workdir() {
-                let workdir = fs::canonicalize(workdir).unwrap_or_else(|_| workdir.to_path_buf());
-                for entry in repo_statuses.iter() {
-                    if let Some(path_str) = entry.path() {
-                        let full_path = workdir.join(path_str);
-                        let status_str = get_status_char(entry.status());
-                        statuses.insert(full_path, status_str.to_string());
-                    }
+        if let (Ok(repo_statuses), Some(workdir)) = (repo.statuses(Some(&mut opts)), repo.workdir())
+        {
+            let workdir = fs::canonicalize(workdir).unwrap_or_else(|_| workdir.to_path_buf());
+            for entry in repo_statuses.iter() {
+                if let Some(path_str) = entry.path() {
+                    let full_path = workdir.join(path_str);
+                    let status_str = get_status_char(entry.status());
+                    statuses.insert(full_path, status_str.to_string());
                 }
             }
         }

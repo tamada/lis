@@ -54,11 +54,9 @@ impl Lis {
         let mut entries = Vec::new();
         let walker = self.create_walker();
 
-        for result in walker {
-            if let Ok(dir_entry) = result {
-                if let Some(entry) = self.process_dir_entry(&dir_entry, &git_statuses) {
-                    entries.push(entry);
-                }
+        for dir_entry in walker.flatten() {
+            if let Some(entry) = self.process_dir_entry(&dir_entry, &git_statuses) {
+                entries.push(entry);
             }
         }
         entries
@@ -111,5 +109,31 @@ impl Lis {
             }
             Some(dir_entry.file_name().to_string_lossy().into_owned())
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_lis_new() {
+        let path = PathBuf::from(".");
+        let lis = Lis::new(path.clone());
+        assert_eq!(lis.path, path);
+        assert!(!lis.recursive);
+        assert!(!lis.all);
+        assert!(!lis.whole_all);
+    }
+
+    #[test]
+    fn test_lis_builder() {
+        let lis = Lis::new(PathBuf::from("."))
+            .recursive(true)
+            .all(true)
+            .whole_all(true);
+        assert!(lis.recursive);
+        assert!(lis.all);
+        assert!(lis.whole_all);
     }
 }

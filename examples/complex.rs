@@ -1,5 +1,5 @@
-use lis::entry::{sort_entries, SortBy};
 use lis::Lis;
+use lis::entry::{SortBy, sort_entries};
 use std::path::PathBuf;
 
 fn main() {
@@ -12,7 +12,7 @@ fn main() {
     // Sort by size, reverse
     sort_entries(&mut entries, SortBy::Size, true);
 
-    println!("{:<10} {:>10} {:<20} {}", "Mode", "Size", "Modified", "Path");
+    println!("{:<10} {:>10} {:<20} Path", "Mode", "Size", "Modified");
     println!("{:-<60}", "");
 
     for entry in entries.iter().take(10) {

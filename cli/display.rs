@@ -1,8 +1,8 @@
+use humansize::{DECIMAL, format_size};
 use lis::entry::Entry;
 use lscolors::LsColors;
-use terminal_size::{terminal_size, Width};
+use terminal_size::{Width, terminal_size};
 use unicode_width::UnicodeWidthStr;
-use humansize::{format_size, DECIMAL};
 
 pub fn print_plain(entries: &[Entry], lscolors: &LsColors, show_icon: bool) {
     use std::io::IsTerminal;
@@ -16,7 +16,9 @@ pub fn print_plain(entries: &[Entry], lscolors: &LsColors, show_icon: bool) {
         return;
     }
 
-    let term_width = terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(80);
+    let term_width = terminal_size()
+        .map(|(Width(w), _)| w as usize)
+        .unwrap_or(80);
     let max_width = get_max_width(entries, show_icon);
 
     print_columns(&names, max_width, term_width);
@@ -29,23 +31,32 @@ fn print_one_column(entries: &[Entry]) {
 }
 
 fn style_entries(entries: &[Entry], lscolors: &LsColors, show_icon: bool) -> Vec<String> {
-    entries.iter().map(|e| {
-        let s = if show_icon {
-            format!("{} {}", get_icon(&e.name, e.is_dir, &e.extension), e.name)
-        } else {
-            e.name.clone()
-        };
-        lscolors.style_for_path(&e.path)
-            .map(|style| style.to_nu_ansi_term_style().paint(&s).to_string())
-            .unwrap_or(s)
-    }).collect()
+    entries
+        .iter()
+        .map(|e| {
+            let s = if show_icon {
+                format!("{} {}", get_icon(&e.name, e.is_dir, &e.extension), e.name)
+            } else {
+                e.name.clone()
+            };
+            lscolors
+                .style_for_path(&e.path)
+                .map(|style| style.to_nu_ansi_term_style().paint(&s).to_string())
+                .unwrap_or(s)
+        })
+        .collect()
 }
 
 fn get_max_width(entries: &[Entry], show_icon: bool) -> usize {
-    entries.iter().map(|e| {
-        let icon_width = if show_icon { 3 } else { 0 };
-        UnicodeWidthStr::width(e.name.as_str()) + icon_width
-    }).max().unwrap_or(0) + 2
+    entries
+        .iter()
+        .map(|e| {
+            let icon_width = if show_icon { 3 } else { 0 };
+            UnicodeWidthStr::width(e.name.as_str()) + icon_width
+        })
+        .max()
+        .unwrap_or(0)
+        + 2
 }
 
 fn print_columns(names: &[String], max_width: usize, term_width: usize) {
@@ -81,13 +92,16 @@ fn style_entry_name(e: &Entry, lscolors: &LsColors, show_icon: bool) -> String {
     } else {
         e.name.clone()
     };
-    lscolors.style_for_path(&e.path)
+    lscolors
+        .style_for_path(&e.path)
         .map(|style| style.to_nu_ansi_term_style().paint(&s).to_string())
         .unwrap_or(s)
 }
 
 pub fn get_icon(_name: &str, is_dir: bool, ext: &str) -> &'static str {
-    if is_dir { return "\u{f115}"; }
+    if is_dir {
+        return "\u{f115}";
+    }
     match ext {
         "rs" => "\u{e7a8}",
         "md" => "\u{f48a}",

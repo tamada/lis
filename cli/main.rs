@@ -3,8 +3,8 @@ mod display;
 
 use args::{Args, Format};
 use clap::Parser;
-use lis::entry::{sort_entries, Entry};
 use lis::Lis;
+use lis::entry::{Entry, sort_entries};
 use lscolors::LsColors;
 
 fn main() {

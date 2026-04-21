@@ -1,11 +1,11 @@
-use std::path::{Path, PathBuf};
+use chrono::{DateTime, Local};
+use clap::ValueEnum;
+use nix::sys::stat::Mode;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::os::unix::fs::{MetadataExt, PermissionsExt};
-use chrono::{DateTime, Local};
+use std::path::{Path, PathBuf};
 use uzers::{get_group_by_gid, get_user_by_uid};
-use nix::sys::stat::Mode;
-use clap::ValueEnum;
 
 /// Represents a single directory entry with its metadata.
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -54,7 +54,7 @@ impl Entry {
         let metadata = fs::symlink_metadata(path).ok()?;
         let is_dir = metadata.is_dir();
         let is_symlink = metadata.file_type().is_symlink();
-        
+
         Some(Entry {
             name,
             path: path.to_path_buf(),
@@ -66,7 +66,11 @@ impl Entry {
             size: metadata.len(),
             modified: get_modified_time(&metadata),
             git_status,
-            extension: path.extension().and_then(|e| e.to_str()).unwrap_or("").to_string(),
+            extension: path
+                .extension()
+                .and_then(|e| e.to_str())
+                .unwrap_or("")
+                .to_string(),
         })
     }
 }
@@ -80,11 +84,7 @@ pub fn sort_entries(entries: &mut [Entry], sort_by: SortBy, reverse: bool) {
             SortBy::Size => a.size.cmp(&b.size),
             SortBy::Extension => a.extension.cmp(&b.extension),
         };
-        if reverse {
-            cmp.reverse()
-        } else {
-            cmp
-        }
+        if reverse { cmp.reverse() } else { cmp }
     });
 }
 
@@ -104,7 +104,8 @@ fn get_group_name(gid: u32) -> String {
 
 /// Retrieves the last modification time of the given metadata as a formatted string.
 fn get_modified_time(metadata: &fs::Metadata) -> String {
-    let modified: DateTime<Local> = metadata.modified()
+    let modified: DateTime<Local> = metadata
+        .modified()
         .unwrap_or_else(|_| std::time::SystemTime::now())
         .into();
     modified.format("%Y-%m-%d %H:%M").to_string()
@@ -125,7 +126,13 @@ fn get_mode_string(mode: u32, is_dir: bool, is_symlink: bool) -> String {
 
 /// Returns the file type character ('d', 'l', or '-') for the entry.
 fn get_file_type_char(is_dir: bool, is_symlink: bool) -> char {
-    if is_dir { 'd' } else if is_symlink { 'l' } else { '-' }
+    if is_dir {
+        'd'
+    } else if is_symlink {
+        'l'
+    } else {
+        '-'
+    }
 }
 
 /// Constructs the permissions part of the mode string.
@@ -142,4 +149,66 @@ fn get_permissions_string(m: Mode) -> String {
     s.push(if m.contains(Mode::S_IWOTH) { 'w' } else { '-' });
     s.push(if m.contains(Mode::S_IXOTH) { 'x' } else { '-' });
     s
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    fn create_test_entry(name: &str, size: u64, modified: &str, extension: &str) -> Entry {
+        Entry {
+            name: name.to_string(),
+            path: PathBuf::from(name),
+            is_dir: false,
+            mode: "-rw-r--r--".to_string(),
+            nlink: 1,
+            owner: "user".to_string(),
+            group: "group".to_string(),
+            size,
+            modified: modified.to_string(),
+            git_status: " ".to_string(),
+            extension: extension.to_string(),
+        }
+    }
+
+    #[test]
+    fn test_sort_entries_by_name() {
+        let mut entries = vec![
+            create_test_entry("b", 20, "2023-01-01 10:00", "txt"),
+            create_test_entry("a", 10, "2023-01-01 11:00", "rs"),
+            create_test_entry("c", 30, "2023-01-01 09:00", "md"),
+        ];
+
+        sort_entries(&mut entries, SortBy::Name, false);
+        assert_eq!(entries[0].name, "a");
+        assert_eq!(entries[1].name, "b");
+        assert_eq!(entries[2].name, "c");
+
+        sort_entries(&mut entries, SortBy::Name, true);
+        assert_eq!(entries[0].name, "c");
+        assert_eq!(entries[1].name, "b");
+        assert_eq!(entries[2].name, "a");
+    }
+
+    #[test]
+    fn test_sort_entries_by_size() {
+        let mut entries = vec![
+            create_test_entry("b", 20, "2023-01-01 10:00", "txt"),
+            create_test_entry("a", 10, "2023-01-01 11:00", "rs"),
+            create_test_entry("c", 30, "2023-01-01 09:00", "md"),
+        ];
+
+        sort_entries(&mut entries, SortBy::Size, false);
+        assert_eq!(entries[0].size, 10);
+        assert_eq!(entries[1].size, 20);
+        assert_eq!(entries[2].size, 30);
+    }
+
+    #[test]
+    fn test_get_file_type_char() {
+        assert_eq!(get_file_type_char(true, false), 'd');
+        assert_eq!(get_file_type_char(false, true), 'l');
+        assert_eq!(get_file_type_char(false, false), '-');
+    }
 }
