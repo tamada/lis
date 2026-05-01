@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/tamada/lis/badge.svg?branch=main)](https://coveralls.io/github/tamada/lis?branch=main)
 
 [![CC-0](https://img.shields.io/badge/License-CC--0-blue.svg)](https://github.com/tamada/lis/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.0.10-blue.svg)](https://github.com/tamada/lis/releases/tag/v0.0.10)
+[![Version](https://img.shields.io/badge/Version-${VERSION}-blue.svg)](https://github.com/tamada/lis/releases/tag/v${VERSION})
 [![DOI](https://zenodo.org/badge/1206549651.svg)](https://doi.org/10.5281/zenodo.19938406)
 
 Minimal and alternative `ls` implementation in Rust.
