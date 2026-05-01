@@ -39,6 +39,8 @@ jobs:
           git push origin v${{ steps.vars.outputs.tag }}
 
       - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh release create v${{ steps.vars.outputs.tag }} --verify-tag --generate-notes --title "Release v${{ steps.vars.outputs.tag }}" --draft
 
@@ -125,6 +127,8 @@ jobs:
           tar cvfz dist/${ASSET_NAME}.tar.gz -C dist $ASSET_NAME
 
       - name: Upload assets
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           ASSET_NAME=${{ needs.setup.outputs.appname }}-${{ needs.setup.outputs.tag}}_${{ matrix.architecture }}_${{ matrix.os_name }}
           gh release upload v${{ needs.setup.outputs.tag }} dist/${ASSET_NAME}.tar.gz
@@ -135,9 +139,8 @@ jobs:
       contents: write 
     needs: publish
     steps:
-      - name: do nothing
-        run: echo "Release v${{ needs.publish.outputs.tag }} has been published."
-
-    #   - name: Finalize release
-    #     run: |
-    #       gh release edit v${{ needs.publish.outputs.tag }} --draft=false
+      - name: Finalize release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release edit v${{ needs.publish.outputs.tag }} --draft=false
