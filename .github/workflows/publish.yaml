@@ -139,6 +139,12 @@ jobs:
       contents: write 
     needs: publish
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+
       - name: Finalize release
         env:
           GH_TOKEN: ${{ github.token }}
