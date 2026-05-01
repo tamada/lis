@@ -47,15 +47,6 @@ jobs:
           ref: main
           fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Initialize Git
-        shell: bash
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "action@github.com"
-          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-          git submodule sync --recursive
-          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-
       - name: Create distribution files.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
