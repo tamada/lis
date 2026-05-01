@@ -1,7 +1,6 @@
 #! /bin/sh
 
-UPLOAD_URL=$1
-TAG=$2
+TAG=$1
 
 for i in dist/*.tar.gz
 do
