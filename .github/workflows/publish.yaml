@@ -18,7 +18,7 @@ jobs:
         id: vars
         run: |
           echo "tag=${GITHUB_HEAD_REF##*/v}" >> $GITHUB_OUTPUT
-
+    
       - name: Create release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -42,7 +42,7 @@ jobs:
           just-version: '1.40.0'
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
@@ -54,11 +54,12 @@ jobs:
           git config --global user.email "action@github.com"
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
+          git tag v${{ needs.setup.outputs.tag }}
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
 
       - name: Create distribution files.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          sh .github/scripts/make_distribution_files.sh v${{ needs.setup.outputs.tag }}
-          sh .github/scripts/upload_assets.sh ${{ needs.setup.outputs.upload_url }} v${{ needs.setup.outputs.tag }}
+          sh .github/scripts/make_distribution_files.sh ${{ needs.setup.outputs.tag }}
+          sh .github/scripts/upload_assets.sh ${{ needs.setup.outputs.tag }}
