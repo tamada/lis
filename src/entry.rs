@@ -3,9 +3,10 @@ use clap::ValueEnum;
 use nix::sys::stat::Mode;
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::os::unix::fs::{MetadataExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use uzers::{get_group_by_gid, get_user_by_uid};
+#[cfg(unix)]
+use std::os::unix::fs::{MetadataExt, PermissionsExt};
 
 /// Represents a single directory entry with its metadata.
 #[derive(Serialize, Deserialize, Debug, Clone)]
