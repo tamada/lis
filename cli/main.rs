@@ -3,7 +3,6 @@ mod display;
 
 use args::{Args, Format};
 use clap::Parser;
-use lis::Lis;
 use lis::entry::{Entry, sort_entries};
 use lscolors::LsColors;
 

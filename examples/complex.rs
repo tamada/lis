@@ -1,6 +1,4 @@
-use lis::Lis;
 use lis::entry::{SortBy, sort_entries};
-use std::path::PathBuf;
 
 fn main() {
     // Advanced usage: recursive, including all files, sorted by size descending

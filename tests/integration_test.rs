@@ -1,4 +1,4 @@
-use lis::{Lis, LisBuilder};
+use lis::LisBuilder;
 use std::fs;
 use tempfile::tempdir;
 
