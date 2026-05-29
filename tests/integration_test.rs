@@ -104,3 +104,58 @@ fn test_sorting_by_extension() {
     assert_eq!(entries[1].extension, "rs");
     assert_eq!(entries[2].extension, "txt");
 }
+
+#[test]
+fn test_gitignore_respect() {
+    use std::process::Command;
+
+    let dir = tempdir().unwrap();
+    
+    // Initialize a git repo so that the ignore crate picks up .gitignore reliably
+    Command::new("git").arg("init").arg(dir.path()).status().unwrap();
+    
+    let gitignore = dir.path().join(".gitignore");
+    let ignored_file = dir.path().join("ignored.txt");
+    let normal_file = dir.path().join("normal.txt");
+    
+    fs::write(&gitignore, "ignored.txt").unwrap();
+    fs::write(&ignored_file, "content").unwrap();
+    fs::write(&normal_file, "content").unwrap();
+
+    let lis = LisBuilder::new().recursive(true).build(dir.path());
+    let entries = lis.list();
+    assert!(!entries.iter().any(|e| e.name == "ignored.txt"));
+    assert!(entries.iter().any(|e| e.name == "normal.txt"));
+
+    // whole_all: ignore gitignore
+    let lis_whole = LisBuilder::new().recursive(true).whole_all(true).build(dir.path());
+    let entries_whole = lis_whole.list();
+    assert!(entries_whole.iter().any(|e| e.name == "ignored.txt"));
+}
+
+#[test]
+fn test_git_status_integration() {
+    use std::process::Command;
+
+    let dir = tempdir().unwrap();
+    
+    // Initialize a git repo
+    let status = Command::new("git")
+        .arg("init")
+        .arg(dir.path())
+        .status()
+        .unwrap();
+    if !status.success() {
+        return; // Skip if git is not available or failed to init
+    }
+
+    let file = dir.path().join("new_file.txt");
+    fs::write(&file, "content").unwrap();
+
+    let lis = LisBuilder::new().build(dir.path());
+    let entries = lis.list();
+    
+    let entry = entries.iter().find(|e| e.name == "new_file.txt").unwrap();
+    // It should be 'A' for a new untracked file (with include_untracked=true)
+    assert_eq!(entry.git_status, "A");
+}

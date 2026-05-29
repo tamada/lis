@@ -117,6 +117,81 @@ pub fn get_icon(_name: &str, is_dir: bool, ext: &str) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use lis::entry::Entry;
+    use std::path::PathBuf;
+
+    #[test]
+    fn test_print_one_column() {
+        // Since print_one_column uses println!, we can't easily capture it without redirecting stdout.
+        // But we can at least call it to ensure it doesn't panic.
+        let entries = vec![
+            Entry {
+                name: "file1".to_string(),
+                path: PathBuf::from("file1"),
+                is_dir: false,
+                mode: "-".to_string(),
+                nlink: 1,
+                owner: "u".to_string(),
+                group: "g".to_string(),
+                size: 0,
+                modified: "m".to_string(),
+                git_status: " ".to_string(),
+                extension: "".to_string(),
+            }
+        ];
+        print_one_column(&entries);
+    }
+
+    #[test]
+    fn test_print_long() {
+        let lscolors = LsColors::from_env().unwrap_or_default();
+        let entries = vec![
+            Entry {
+                name: "file1".to_string(),
+                path: PathBuf::from("file1"),
+                is_dir: false,
+                mode: "-".to_string(),
+                nlink: 1,
+                owner: "u".to_string(),
+                group: "g".to_string(),
+                size: 100,
+                modified: "2023-01-01 10:00".to_string(),
+                git_status: " ".to_string(),
+                extension: "".to_string(),
+            }
+        ];
+        print_long(&entries, &lscolors, false);
+    }
+
+    #[test]
+    fn test_style_entries() {
+        let lscolors = LsColors::from_env().unwrap_or_default();
+        let entries = vec![
+            Entry {
+                name: "file1".to_string(),
+                path: PathBuf::from("file1"),
+                is_dir: false,
+                mode: "-".to_string(),
+                nlink: 1,
+                owner: "u".to_string(),
+                group: "g".to_string(),
+                size: 0,
+                modified: "m".to_string(),
+                git_status: " ".to_string(),
+                extension: "".to_string(),
+            }
+        ];
+        let styled = style_entries(&entries, &lscolors, false);
+        assert_eq!(styled.len(), 1);
+        assert!(styled[0].contains("file1"));
+    }
+
+    #[test]
+    fn test_print_columns() {
+        let names = vec!["a".to_string(), "b".to_string(), "c".to_string()];
+        print_columns(&names, 10, 80);
+        print_columns(&names, 10, 20); // Test narrow terminal
+    }
 
     #[test]
     fn test_get_icon() {
@@ -125,6 +200,71 @@ mod tests {
         assert_eq!(get_icon("Cargo.toml", false, "toml"), "\u{f013}");
         assert_eq!(get_icon("src", true, ""), "\u{f115}");
         assert_eq!(get_icon("unknown", false, "unknown"), "\u{f15b}");
+    }
+
+    #[test]
+    fn test_get_max_width() {
+        let entries = vec![
+            Entry {
+                name: "file1.txt".to_string(),
+                path: PathBuf::from("file1.txt"),
+                is_dir: false,
+                mode: "-rw-r--r--".to_string(),
+                nlink: 1,
+                owner: "user".to_string(),
+                group: "group".to_string(),
+                size: 100,
+                modified: "2023-01-01 10:00".to_string(),
+                git_status: " ".to_string(),
+                extension: "txt".to_string(),
+            },
+            Entry {
+                name: "long_filename_directory".to_string(),
+                path: PathBuf::from("long_filename_directory"),
+                is_dir: true,
+                mode: "drwxr-xr-x".to_string(),
+                nlink: 2,
+                owner: "user".to_string(),
+                group: "group".to_string(),
+                size: 4096,
+                modified: "2023-01-01 11:00".to_string(),
+                git_status: " ".to_string(),
+                extension: "".to_string(),
+            },
+        ];
+
+        // Without icon: max("file1.txt".len(), "long_filename_directory".len()) + 2
+        // "long_filename_directory".len() = 23. 23 + 2 = 25.
+        assert_eq!(get_max_width(&entries, false), 25);
+
+        // With icon: max("file1.txt".len() + 3, "long_filename_directory".len() + 3) + 2
+        // 23 + 3 + 2 = 28.
+        assert_eq!(get_max_width(&entries, true), 28);
+    }
+
+    #[test]
+    fn test_style_entry_name() {
+        let lscolors = LsColors::from_env().unwrap_or_default();
+        let entry = Entry {
+            name: "test.rs".to_string(),
+            path: PathBuf::from("test.rs"),
+            is_dir: false,
+            mode: "-rw-r--r--".to_string(),
+            nlink: 1,
+            owner: "user".to_string(),
+            group: "group".to_string(),
+            size: 100,
+            modified: "2023-01-01 10:00".to_string(),
+            git_status: " ".to_string(),
+            extension: "rs".to_string(),
+        };
+
+        let styled = style_entry_name(&entry, &lscolors, false);
+        assert!(styled.contains("test.rs"));
+
+        let styled_icon = style_entry_name(&entry, &lscolors, true);
+        assert!(styled_icon.contains("\u{e7a8}"));
+        assert!(styled_icon.contains("test.rs"));
     }
 }
 
