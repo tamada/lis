@@ -65,13 +65,13 @@ For more CLI details, see [cli/README.md](cli/README.md).
 `lis` can also be used as a library in your Rust projects.
 
 ```rust
-use lis::Lis;
-use std::path::PathBuf;
+use lis::LisBuilder;
 
 fn main() {
-    let lis = Lis::new(PathBuf::from("."))
+    let lis = LisBuilder::new()
         .all(true)
-        .recursive(false);
+        .recursive(false)
+        .build(".");
 
     let entries = lis.list();
     for entry in entries {

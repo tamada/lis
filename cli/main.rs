@@ -11,10 +11,11 @@ fn main() {
     let args = Args::parse();
     let lscolors = LsColors::from_env().unwrap_or_default();
 
-    let mut entries = Lis::new(args.path.clone())
+    let mut entries = lis::LisBuilder::new()
         .recursive(args.recursive)
         .all(args.all)
         .whole_all(args.whole_all)
+        .build(args.path.clone())
         .list();
 
     sort_entries(&mut entries, args.sort.clone(), args.reverse);

@@ -1,4 +1,4 @@
-use lis::Lis;
+use lis::{Lis, LisBuilder};
 use std::fs;
 use tempfile::tempdir;
 
@@ -13,7 +13,7 @@ fn test_list_basic_structure() {
     fs::write(&file2, "world").unwrap();
     fs::create_dir(&sub).unwrap();
 
-    let lis = Lis::new(dir.path().to_path_buf());
+    let lis = LisBuilder::new().build(dir.path());
     let entries = lis.list();
     
     assert_eq!(entries.len(), 3);
@@ -32,13 +32,13 @@ fn test_list_all_hidden() {
     fs::write(&normal, "normal").unwrap();
 
     // Default: no hidden
-    let lis = Lis::new(dir.path().to_path_buf());
+    let lis = LisBuilder::new().build(dir.path());
     let entries = lis.list();
     assert_eq!(entries.len(), 1);
     assert_eq!(entries[0].name, "normal.txt");
 
     // All: show hidden
-    let lis_all = Lis::new(dir.path().to_path_buf()).all(true);
+    let lis_all = LisBuilder::new().all(true).build(dir.path());
     let entries_all = lis_all.list();
     assert_eq!(entries_all.len(), 2);
     assert!(entries_all.iter().any(|e| e.name == ".hidden"));
@@ -54,13 +54,13 @@ fn test_recursive_listing() {
     fs::write(&file, "hello").unwrap();
 
     // Not recursive
-    let lis = Lis::new(dir.path().to_path_buf());
+    let lis = LisBuilder::new().build(dir.path());
     let entries = lis.list();
     assert_eq!(entries.len(), 1);
     assert_eq!(entries[0].name, "sub");
 
     // Recursive
-    let lis_rec = Lis::new(dir.path().to_path_buf()).recursive(true);
+    let lis_rec = LisBuilder::new().recursive(true).build(dir.path());
     let entries_rec = lis_rec.list();
     assert_eq!(entries_rec.len(), 3);
     assert!(entries_rec.iter().any(|e| e.name == "sub"));
@@ -79,7 +79,7 @@ fn test_symlink_handling() {
     fs::write(&target, "target").unwrap();
     symlink(&target, &link).unwrap();
 
-    let lis = Lis::new(dir.path().to_path_buf());
+    let lis = LisBuilder::new().build(dir.path());
     let entries = lis.list();
     
     let link_entry = entries.iter().find(|e| e.name == "link.txt").unwrap();
@@ -95,7 +95,7 @@ fn test_sorting_by_extension() {
     fs::write(dir.path().join("a.rs"), "").unwrap();
     fs::write(dir.path().join("c.md"), "").unwrap();
 
-    let lis = Lis::new(dir.path().to_path_buf());
+    let lis = LisBuilder::new().build(dir.path());
     let mut entries = lis.list();
     
     sort_entries(&mut entries, SortBy::Extension, false);

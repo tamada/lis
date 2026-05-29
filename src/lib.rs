@@ -1,23 +1,24 @@
 //! `lis` is a library and CLI tool for listing directory entries.
 //!
 //! It provides features like Git status integration, file icons, and multiple output formats.
-//! The core of the library is the [`Lis`] struct, which follows the builder pattern
-//! to configure directory traversal.
+//! The core of the library is the [`Lis`] struct, which is typically constructed
+//! using the [`LisBuilder`].
 //!
 //! # Main Components
 //!
-//! - [`Lis`]: The main entry point for configuring and executing directory listing.
+//! - [`LisBuilder`]: The recommended way to configure and create a [`Lis`] instance.
+//! - [`Lis`]: The execution engine for listing directory contents.
 //! - [`entry::Entry`]: Represents a single file or directory with its metadata.
 //! - [`git`]: Handles Git status retrieval for the listed entries.
 //!
 //! # Examples
 //!
 //! ```
-//! use lis::Lis;
-//! use std::path::PathBuf;
+//! use lis::LisBuilder;
 //!
-//! let entries = Lis::new(PathBuf::from("."))
+//! let entries = LisBuilder::new()
 //!     .all(true)
+//!     .build(".")
 //!     .list();
 //!
 //! for entry in entries {
@@ -34,20 +35,16 @@ use ignore::{Walk, WalkBuilder};
 use std::fs;
 use std::path::{Path, PathBuf};
 
-/// The main entry point for listing directory contents.
+/// The execution engine for listing directory contents.
 ///
-/// `Lis` uses a builder pattern to configure how directory entries should be retrieved.
+/// It is recommended to use [`LisBuilder`] to create an instance of `Lis`.
 ///
 /// # Examples
 ///
 /// ```
 /// use lis::Lis;
-/// use std::path::PathBuf;
 ///
-/// let lis = Lis::new(PathBuf::from("."))
-///     .all(true)
-///     .recursive(false);
-///
+/// let lis = Lis::new(".");
 /// let entries = lis.list();
 /// ```
 pub struct Lis {
@@ -57,20 +54,36 @@ pub struct Lis {
     whole_all: bool,
 }
 
-impl Lis {
-    /// Creates a new `Lis` instance for the given path.
+/// A builder for configuring a [`Lis`] instance.
+///
+/// # Examples
+///
+/// ```
+/// use lis::LisBuilder;
+///
+/// let lis = LisBuilder::new()
+///     .recursive(true)
+///     .all(true)
+///     .build(".");
+/// ```
+pub struct LisBuilder {
+    recursive: bool,
+    all: bool,
+    whole_all: bool,
+}
+
+impl LisBuilder {
+    /// Creates a new `LisBuilder` with default settings.
     ///
     /// # Examples
     ///
     /// ```
-    /// use lis::Lis;
-    /// use std::path::PathBuf;
+    /// use lis::LisBuilder;
     ///
-    /// let lis = Lis::new(".");
+    /// let builder = LisBuilder::new();
     /// ```
-    pub fn new <P: AsRef<Path>>(path: P) -> Self {
+    pub fn new() -> Self {
         Self {
-            path: path.as_ref().to_path_buf(),
             recursive: false,
             all: false,
             whole_all: false,
@@ -82,10 +95,9 @@ impl Lis {
     /// # Examples
     ///
     /// ```
-    /// use lis::Lis;
-    /// use std::path::PathBuf;
+    /// use lis::LisBuilder;
     ///
-    /// let lis = Lis::new(".").recursive(true);
+    /// let builder = LisBuilder::new().recursive(true);
     /// ```
     pub fn recursive(mut self, recursive: bool) -> Self {
         self.recursive = recursive;
@@ -97,10 +109,9 @@ impl Lis {
     /// # Examples
     ///
     /// ```
-    /// use lis::Lis;
-    /// use std::path::PathBuf;
+    /// use lis::LisBuilder;
     ///
-    /// let lis = Lis::new(".").all(true);
+    /// let builder = LisBuilder::new().all(true);
     /// ```
     pub fn all(mut self, all: bool) -> Self {
         self.all = all;
@@ -112,14 +123,46 @@ impl Lis {
     /// # Examples
     ///
     /// ```
-    /// use lis::Lis;
-    /// use std::path::PathBuf;
+    /// use lis::LisBuilder;
     ///
-    /// let lis = Lis::new(".").whole_all(true);
+    /// let builder = LisBuilder::new().whole_all(true);
     /// ```
     pub fn whole_all(mut self, whole_all: bool) -> Self {
         self.whole_all = whole_all;
         self
+    }
+
+    /// Consumes the builder and returns a configured [`Lis`] instance.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::LisBuilder;
+    ///
+    /// let lis = LisBuilder::new().build(".");
+    /// ```
+    pub fn build<P: AsRef<Path>>(self, path: P) -> Lis {
+        Lis {
+            path: path.as_ref().to_path_buf(),
+            recursive: self.recursive,
+            all: self.all,
+            whole_all: self.whole_all,
+        }
+    }
+}
+
+impl Lis {
+    /// Creates a new `Lis` instance for the given path with default options.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::Lis;
+    ///
+    /// let lis = Lis::new(".");
+    /// ```
+    pub fn new<P: AsRef<Path>>(path: P) -> Self {
+        LisBuilder::new().build(path)
     }
 
     /// Lists the entries in the directory according to the configured options.
@@ -214,10 +257,11 @@ mod tests {
 
     #[test]
     fn test_lis_builder() {
-        let lis = Lis::new(PathBuf::from("."))
+        let lis = LisBuilder::new()
             .recursive(true)
             .all(true)
-            .whole_all(true);
+            .whole_all(true)
+            .build(".");
         assert!(lis.recursive);
         assert!(lis.all);
         assert!(lis.whole_all);

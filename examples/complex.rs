@@ -4,9 +4,10 @@ use std::path::PathBuf;
 
 fn main() {
     // Advanced usage: recursive, including all files, sorted by size descending
-    let mut entries = Lis::new(PathBuf::from("."))
+    let mut entries = lis::LisBuilder::new()
         .recursive(true)
         .all(true)
+        .build(".")
         .list();
 
     // Sort by size, reverse
