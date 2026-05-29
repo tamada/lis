@@ -1,3 +1,8 @@
+//! Data structures and sorting logic for directory entries.
+//!
+//! This module defines the [`Entry`] struct, which encapsulates metadata for a file
+//! or directory, and the [`SortBy`] enum for configuring how entries are ordered.
+
 use chrono::{DateTime, Local};
 use clap::ValueEnum;
 use nix::sys::stat::Mode;

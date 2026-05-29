@@ -1,6 +1,29 @@
 //! `lis` is a library and CLI tool for listing directory entries.
 //!
-//! It provides features like Git status, icons, and multiple output formats.
+//! It provides features like Git status integration, file icons, and multiple output formats.
+//! The core of the library is the [`Lis`] struct, which follows the builder pattern
+//! to configure directory traversal.
+//!
+//! # Main Components
+//!
+//! - [`Lis`]: The main entry point for configuring and executing directory listing.
+//! - [`entry::Entry`]: Represents a single file or directory with its metadata.
+//! - [`git`]: Handles Git status retrieval for the listed entries.
+//!
+//! # Examples
+//!
+//! ```
+//! use lis::Lis;
+//! use std::path::PathBuf;
+//!
+//! let entries = Lis::new(PathBuf::from("."))
+//!     .all(true)
+//!     .list();
+//!
+//! for entry in entries {
+//!     println!("{}", entry.name);
+//! }
+//! ```
 
 pub mod entry;
 pub mod git;

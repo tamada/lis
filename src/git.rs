@@ -1,3 +1,8 @@
+//! Git status integration for directory entries.
+//!
+//! This module provides functionality to discover Git repositories and retrieve
+//! the status (Modified, Added, Deleted, etc.) of files within them.
+
 use git2::{Repository, StatusOptions};
 use std::collections::HashMap;
 use std::fs;
