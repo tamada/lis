@@ -66,11 +66,11 @@ impl Lis {
     /// use lis::Lis;
     /// use std::path::PathBuf;
     ///
-    /// let lis = Lis::new(PathBuf::from("."));
+    /// let lis = Lis::new(".");
     /// ```
-    pub fn new(path: PathBuf) -> Self {
+    pub fn new <P: AsRef<Path>>(path: P) -> Self {
         Self {
-            path,
+            path: path.as_ref().to_path_buf(),
             recursive: false,
             all: false,
             whole_all: false,
@@ -85,7 +85,7 @@ impl Lis {
     /// use lis::Lis;
     /// use std::path::PathBuf;
     ///
-    /// let lis = Lis::new(PathBuf::from(".")).recursive(true);
+    /// let lis = Lis::new(".").recursive(true);
     /// ```
     pub fn recursive(mut self, recursive: bool) -> Self {
         self.recursive = recursive;
@@ -100,7 +100,7 @@ impl Lis {
     /// use lis::Lis;
     /// use std::path::PathBuf;
     ///
-    /// let lis = Lis::new(PathBuf::from(".")).all(true);
+    /// let lis = Lis::new(".").all(true);
     /// ```
     pub fn all(mut self, all: bool) -> Self {
         self.all = all;
@@ -115,7 +115,7 @@ impl Lis {
     /// use lis::Lis;
     /// use std::path::PathBuf;
     ///
-    /// let lis = Lis::new(PathBuf::from(".")).whole_all(true);
+    /// let lis = Lis::new(".").whole_all(true);
     /// ```
     pub fn whole_all(mut self, whole_all: bool) -> Self {
         self.whole_all = whole_all;
@@ -132,7 +132,7 @@ impl Lis {
     /// use lis::Lis;
     /// use std::path::PathBuf;
     ///
-    /// let lis = Lis::new(PathBuf::from("."));
+    /// let lis = Lis::new(".");
     /// let entries = lis.list();
     /// ```
     pub fn list(&self) -> Vec<Entry> {
