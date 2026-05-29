@@ -96,4 +96,5 @@ This icon is created by [yukyik](https://www.flaticon.com/packs/cute-cartoon-ill
 
 ## 📄 License
 
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+
+This project is licensed under CC-0 1.0 Universal. See the [LICENSE](LICENSE) file for details.
