@@ -67,11 +67,32 @@ fn print_columns(names: &[String], max_width: usize, term_width: usize) {
         for c in 0..cols {
             let i = c * rows + r;
             if i < names.len() {
-                print!("{:<width$}", names[i], width = max_width);
+                let pad = max_width.saturating_sub(visible_width(&names[i]));
+                print!("{}{}", names[i], " ".repeat(pad));
             }
         }
         println!();
     }
+}
+
+fn visible_width(s: &str) -> usize {
+    let mut plain = String::with_capacity(s.len());
+    let mut chars = s.chars().peekable();
+
+    while let Some(ch) = chars.next() {
+        if ch == '\u{1b}' && chars.peek() == Some(&'[') {
+            chars.next();
+            for c in chars.by_ref() {
+                if ('@'..='~').contains(&c) {
+                    break;
+                }
+            }
+            continue;
+        }
+        plain.push(ch);
+    }
+
+    UnicodeWidthStr::width(plain.as_str())
 }
 
 pub fn print_long(entries: &[Entry], lscolors: &LsColors, show_icon: bool) {
@@ -194,6 +215,13 @@ mod tests {
     }
 
     #[test]
+    fn test_visible_width() {
+        let plain = "abc";
+        let colored = "\u{1b}[31mabc\u{1b}[0m";
+        assert_eq!(visible_width(plain), visible_width(colored));
+    }
+
+    #[test]
     fn test_get_icon() {
         assert_eq!(get_icon("main.rs", false, "rs"), "\u{e7a8}");
         assert_eq!(get_icon("README.md", false, "md"), "\u{f48a}");
@@ -267,4 +295,3 @@ mod tests {
         assert!(styled_icon.contains("test.rs"));
     }
 }
-
