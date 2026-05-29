@@ -66,6 +66,7 @@ pub struct Lis {
 ///     .all(true)
 ///     .build(".");
 /// ```
+#[derive(Default)]
 pub struct LisBuilder {
     recursive: bool,
     all: bool,
@@ -83,13 +84,11 @@ impl LisBuilder {
     /// let builder = LisBuilder::new();
     /// ```
     pub fn new() -> Self {
-        Self {
-            recursive: false,
-            all: false,
-            whole_all: false,
-        }
+        Self::default()
     }
+}
 
+impl LisBuilder {
     /// Sets whether to list entries recursively.
     ///
     /// # Examples
