@@ -1,10 +1,21 @@
-# lis
+# 🐿️ lis
+
+[![build](https://github.com/tamada/lis/actions/workflows/build.yaml/badge.svg)](https://github.com/tamada/lis/actions/workflows/build.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/tamada/lis/badge.svg?branch=main)](https://coveralls.io/github/tamada/lis?branch=main)
+
+[![CC-0](https://img.shields.io/badge/License-CC--0-blue.svg)](https://github.com/tamada/lis/blob/main/LICENSE)
+[![Version](https://img.shields.io/badge/Version-0.0.10-blue.svg)](https://github.com/tamada/lis/releases/tag/v0.0.10)
+[![DOI](https://zenodo.org/badge/1206549651.svg)](https://doi.org/10.5281/zenodo.19938406)
 
 `lis` is a modern, feature-rich directory listing tool written in Rust. It aims to provide a better alternative to `ls` with built-in support for Git status, icons, and multiple output formats.
+This product is an example project for learning Rust and the development process of open source software.
+It is not intended for production use.
 
-![Squirrel](.github/assets/squirrel.png)
+## 🗣️ Overview
 
-## Features
+`lis` provides a library and a CLI tool for listing directory entries with advanced features like Git status, icons, and multiple output formats.
+
+## 🚀 Features
 
 - **Git Integration**: Shows Git status for files and directories (A, M, D, R, T).
 - **Icons**: Beautiful icons for different file types (requires a Nerd Font).
@@ -14,13 +25,13 @@
 - **Recursive**: Supports recursive directory listing.
 - **Colorized Output**: High-quality colorized output based on `LS_COLORS`.
 
-## Installation
+## 📦 Installation
 
 ```bash
 cargo install --path .
 ```
 
-## Usage
+## 💻 Usage (CLI)
 
 ### Basic listing
 ```bash
@@ -47,7 +58,9 @@ lis --format json > entries.json
 lis --sort size -r
 ```
 
-## Library Usage
+For more CLI details, see [cli/README.md](cli/README.md).
+
+## 📖 Library Usage
 
 `lis` can also be used as a library in your Rust projects.
 
@@ -67,27 +80,20 @@ fn main() {
 }
 ```
 
-## CLI Options
+Check the [examples](examples/) directory for more details.
 
-```text
-Usage: lis [OPTIONS] [PATH]
+## ℹ️ About
 
-Arguments:
-  [PATH]  Directory to list [default: .]
+### 👨‍💼​ Developers 👩‍💼
 
-Options:
-  --sort <SORT>      Sort by [default: name] [possible values: name, time, size, extension]
-  -r, --reverse          Reverse sort order
-  -l, --long             Long format
-  -a, --all              All entries, respecting .gitignore
-  -A, --whole-all        All entries, ignoring .gitignore
-  --icon             Display icons
-  --format <FORMAT>  Output format [default: plain] [possible values: plain, csv, json, yaml]
-  -R, --recursive        Recursive listing
-  -h, --help             Print help
-  -V, --version          Print version
-```
+- Haruaki Tamada ([tamada](https://github.com/tamada))
 
-## License
+### 🎃 Logo
+
+![logo](.github/assets/squirrel.png)
+
+This icon is created by [yukyik](https://www.flaticon.com/packs/cute-cartoon-illustration-17593662l) and distributed on [Flaticon](https://www.flaticon.com).
+
+## 📄 License
 
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
