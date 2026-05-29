@@ -1,64 +1,93 @@
-# 🐿️ lis
+# lis
 
-[![build](https://github.com/tamada/lis/actions/workflows/build.yaml/badge.svg)](https://github.com/tamada/lis/actions/workflows/build.yaml)
-[![Coverage Status](https://coveralls.io/repos/github/tamada/lis/badge.svg?branch=main)](https://coveralls.io/github/tamada/lis?branch=main)
+`lis` is a modern, feature-rich directory listing tool written in Rust. It aims to provide a better alternative to `ls` with built-in support for Git status, icons, and multiple output formats.
 
-[![CC-0](https://img.shields.io/badge/License-CC--0-blue.svg)](https://github.com/tamada/lis/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.0.10-blue.svg)](https://github.com/tamada/lis/releases/tag/v0.0.10)
-[![DOI](https://zenodo.org/badge/1206549651.svg)](https://doi.org/10.5281/zenodo.19938406)
+![Squirrel](.github/assets/squirrel.png)
 
-Minimal and alternative `ls` implementation in Rust.
-This product is an example project for learning Rust and the development process of open source software.
-It is not intended for production use.
+## Features
 
-## 🗣️ Overview
+- **Git Integration**: Shows Git status for files and directories (A, M, D, R, T).
+- **Icons**: Beautiful icons for different file types (requires a Nerd Font).
+- **Multiple Formats**: Support for Plain, CSV, JSON, and YAML output.
+- **Sorting**: Sort by Name, Time, Size, or Extension.
+- **Filtering**: Respects `.gitignore` by default.
+- **Recursive**: Supports recursive directory listing.
+- **Colorized Output**: High-quality colorized output based on `LS_COLORS`.
 
-`lis` provides a library and a CLI tool for listing directory entries with advanced features like Git status, icons, and multiple output formats.
+## Installation
 
-## 🚀 Features
+```bash
+cargo install --path .
+```
 
-- List entries in specified directories.
-- Support for sorting (name, time, size, extension) and reverse order.
-- Long format with detailed information, including **Git status**.
-- Support for hidden files, respecting `.gitignore`.
-- Display icons for each entry based on file type and extension.
-- Multiple output formats: `plain`, `csv`, `json`, and `yaml`.
-- Support for `LS_COLORS` environment variable.
+## Usage
 
-## 📖 Library Usage
+### Basic listing
+```bash
+lis
+```
 
-Add `lis` to your `Cargo.toml`. Then use it as follows:
+### Long format with icons
+```bash
+lis -l --icon
+```
+
+### Recursive listing including hidden files
+```bash
+lis -R -a
+```
+
+### Export to JSON
+```bash
+lis --format json > entries.json
+```
+
+### Sort by size in reverse order
+```bash
+lis --sort size -r
+```
+
+## Library Usage
+
+`lis` can also be used as a library in your Rust projects.
 
 ```rust
 use lis::Lis;
 use std::path::PathBuf;
 
 fn main() {
-    let entries = Lis::new(PathBuf::from("."))
-        .recursive(true)
+    let lis = Lis::new(PathBuf::from("."))
         .all(true)
-        .list();
+        .recursive(false);
 
+    let entries = lis.list();
     for entry in entries {
-        println!("{:<10} {}", entry.mode, entry.name);
+        println!("{}: {}", entry.name, entry.git_status);
     }
 }
 ```
 
-Check the [examples](examples/) directory for more details.
+## CLI Options
 
-## 💻 CLI Usage
+```text
+Usage: lis [OPTIONS] [PATH]
 
-See [cli/README.md](cli/README.md) for more details.
+Arguments:
+  [PATH]  Directory to list [default: .]
 
-## ℹ️ About
+Options:
+  --sort <SORT>      Sort by [default: name] [possible values: name, time, size, extension]
+  -r, --reverse          Reverse sort order
+  -l, --long             Long format
+  -a, --all              All entries, respecting .gitignore
+  -A, --whole-all        All entries, ignoring .gitignore
+  --icon             Display icons
+  --format <FORMAT>  Output format [default: plain] [possible values: plain, csv, json, yaml]
+  -R, --recursive        Recursive listing
+  -h, --help             Print help
+  -V, --version          Print version
+```
 
-### 👨‍💼​ Developers 👩‍💼
+## License
 
-- Haruaki Tamada ([tamada](https://github.com/tamada))
-
-### 🎃 Logo
-
-![logo](.github/assets/squirrel.png)
-
-This icon is created by [yukyik](https://www.flaticon.com/packs/cute-cartoon-illustration-17593662l) and distributed on [Flaticon](https://www.flaticon.com).
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.

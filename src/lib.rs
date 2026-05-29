@@ -12,6 +12,21 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 /// The main entry point for listing directory contents.
+///
+/// `Lis` uses a builder pattern to configure how directory entries should be retrieved.
+///
+/// # Examples
+///
+/// ```
+/// use lis::Lis;
+/// use std::path::PathBuf;
+///
+/// let lis = Lis::new(PathBuf::from("."))
+///     .all(true)
+///     .recursive(false);
+///
+/// let entries = lis.list();
+/// ```
 pub struct Lis {
     path: PathBuf,
     recursive: bool,
@@ -21,6 +36,15 @@ pub struct Lis {
 
 impl Lis {
     /// Creates a new `Lis` instance for the given path.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::Lis;
+    /// use std::path::PathBuf;
+    ///
+    /// let lis = Lis::new(PathBuf::from("."));
+    /// ```
     pub fn new(path: PathBuf) -> Self {
         Self {
             path,
@@ -31,24 +55,63 @@ impl Lis {
     }
 
     /// Sets whether to list entries recursively.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::Lis;
+    /// use std::path::PathBuf;
+    ///
+    /// let lis = Lis::new(PathBuf::from(".")).recursive(true);
+    /// ```
     pub fn recursive(mut self, recursive: bool) -> Self {
         self.recursive = recursive;
         self
     }
 
     /// Sets whether to list hidden entries while respecting `.gitignore`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::Lis;
+    /// use std::path::PathBuf;
+    ///
+    /// let lis = Lis::new(PathBuf::from(".")).all(true);
+    /// ```
     pub fn all(mut self, all: bool) -> Self {
         self.all = all;
         self
     }
 
     /// Sets whether to list all entries, ignoring `.gitignore`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::Lis;
+    /// use std::path::PathBuf;
+    ///
+    /// let lis = Lis::new(PathBuf::from(".")).whole_all(true);
+    /// ```
     pub fn whole_all(mut self, whole_all: bool) -> Self {
         self.whole_all = whole_all;
         self
     }
 
     /// Lists the entries in the directory according to the configured options.
+    ///
+    /// Returns a vector of [`Entry`](crate::entry::Entry) objects.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::Lis;
+    /// use std::path::PathBuf;
+    ///
+    /// let lis = Lis::new(PathBuf::from("."));
+    /// let entries = lis.list();
+    /// ```
     pub fn list(&self) -> Vec<Entry> {
         let git_statuses = get_git_statuses(&self.path);
         let mut entries = Vec::new();

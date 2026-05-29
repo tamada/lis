@@ -6,6 +6,15 @@ use std::path::{Path, PathBuf};
 /// Retrieves the Git status for each file in the repository containing the given path.
 ///
 /// Returns a map from absolute file paths to their status strings.
+///
+/// # Examples
+///
+/// ```
+/// use lis::git::get_git_statuses;
+/// use std::path::Path;
+///
+/// let statuses = get_git_statuses(Path::new("."));
+/// ```
 pub fn get_git_statuses(path: &Path) -> HashMap<PathBuf, String> {
     let mut statuses = HashMap::new();
     if let Ok(repo) = Repository::discover(path) {
@@ -27,6 +36,9 @@ pub fn get_git_statuses(path: &Path) -> HashMap<PathBuf, String> {
 }
 
 /// Converts a Git status to a single character string.
+///
+/// Returns "A" for new files, "M" for modified, "D" for deleted, "R" for renamed,
+/// "T" for type change, and " " otherwise.
 fn get_status_char(status: git2::Status) -> &'static str {
     if status.is_index_new() || status.is_wt_new() {
         "A"
@@ -40,5 +52,26 @@ fn get_status_char(status: git2::Status) -> &'static str {
         "T"
     } else {
         " "
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_status_char() {
+        // Test various git2::Status combinations
+        assert_eq!(get_status_char(git2::Status::INDEX_NEW), "A");
+        assert_eq!(get_status_char(git2::Status::WT_NEW), "A");
+        assert_eq!(get_status_char(git2::Status::INDEX_MODIFIED), "M");
+        assert_eq!(get_status_char(git2::Status::WT_MODIFIED), "M");
+        assert_eq!(get_status_char(git2::Status::INDEX_DELETED), "D");
+        assert_eq!(get_status_char(git2::Status::WT_DELETED), "D");
+        assert_eq!(get_status_char(git2::Status::INDEX_RENAMED), "R");
+        assert_eq!(get_status_char(git2::Status::WT_RENAMED), "R");
+        assert_eq!(get_status_char(git2::Status::INDEX_TYPECHANGE), "T");
+        assert_eq!(get_status_char(git2::Status::WT_TYPECHANGE), "T");
+        assert_eq!(get_status_char(git2::Status::CURRENT), " ");
     }
 }

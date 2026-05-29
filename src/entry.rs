@@ -9,6 +9,16 @@ use uzers::{get_group_by_gid, get_user_by_uid};
 use std::os::unix::fs::{MetadataExt, PermissionsExt};
 
 /// Represents a single directory entry with its metadata.
+///
+/// # Examples
+///
+/// ```
+/// use lis::entry::Entry;
+/// use std::path::Path;
+///
+/// // Note: In practice, you would pass an existing path.
+/// // let entry = Entry::new(Path::new("Cargo.toml"), "Cargo.toml".to_string(), " ".to_string());
+/// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Entry {
     /// The display name of the entry.
@@ -36,6 +46,14 @@ pub struct Entry {
 }
 
 /// Available sorting options for directory entries.
+///
+/// # Examples
+///
+/// ```
+/// use lis::entry::SortBy;
+///
+/// let sort = SortBy::Name;
+/// ```
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SortBy {
@@ -51,6 +69,17 @@ pub enum SortBy {
 
 impl Entry {
     /// Creates a new `Entry` instance by reading metadata from the filesystem.
+    ///
+    /// Returns `None` if the metadata cannot be retrieved.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lis::entry::Entry;
+    /// use std::path::Path;
+    ///
+    /// let entry = Entry::new(Path::new("Cargo.toml"), "Cargo.toml".to_string(), " ".to_string());
+    /// ```
     pub fn new(path: &Path, name: String, git_status: String) -> Option<Self> {
         let metadata = fs::symlink_metadata(path).ok()?;
         let is_dir = metadata.is_dir();
@@ -77,6 +106,17 @@ impl Entry {
 }
 
 /// Sorts the given slice of entries based on the specified criteria.
+///
+/// # Examples
+///
+/// ```
+/// use lis::entry::{Entry, SortBy, sort_entries};
+/// use std::path::PathBuf;
+///
+/// let mut entries = Vec::new();
+/// // ... populate entries ...
+/// sort_entries(&mut entries, SortBy::Name, false);
+/// ```
 pub fn sort_entries(entries: &mut [Entry], sort_by: SortBy, reverse: bool) {
     entries.sort_by(|a, b| {
         let cmp = match sort_by {

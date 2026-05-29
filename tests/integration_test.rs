@@ -40,3 +40,26 @@ fn test_recursive_list() {
     let has_src_lib_rs = entries.iter().any(|e| e.name == "src/lib.rs" || e.name == "src/lib.rs".replace("/", std::path::MAIN_SEPARATOR.to_string().as_str()));
     assert!(has_src_lib_rs);
 }
+
+#[test]
+fn test_list_all() {
+    let lis = Lis::new(PathBuf::from(".")).all(true);
+    let entries = lis.list();
+    
+    // Check if .gitignore is in the list (it should be as it's a hidden file but not ignored by itself usually)
+    let has_gitignore = entries.iter().any(|e| e.name == ".gitignore");
+    assert!(has_gitignore);
+}
+
+#[test]
+fn test_sorting_integration() {
+    use lis::entry::{sort_entries, SortBy};
+    
+    let lis = Lis::new(PathBuf::from("."));
+    let mut entries = lis.list();
+    
+    sort_entries(&mut entries, SortBy::Size, false);
+    for i in 0..entries.len() - 1 {
+        assert!(entries[i].size <= entries[i+1].size);
+    }
+}
