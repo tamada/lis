@@ -29,6 +29,10 @@ pub struct Args {
     #[arg(short = 'A', long)]
     pub whole_all: bool,
 
+    /// Quote the entries.
+    #[arg(long)]
+    pub quote: bool,
+
     /// Display icons
     #[arg(long)]
     pub icon: bool,
@@ -40,6 +44,11 @@ pub struct Args {
     /// Recursive listing
     #[arg(short = 'R', long)]
     pub recursive: bool,
+
+    #[cfg(debug_assertions)]
+    /// Generate the completion script files for several shells.
+    #[arg(long)]
+    pub completions: bool
 }
 
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq)]

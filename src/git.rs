@@ -29,7 +29,7 @@ pub fn get_git_statuses(path: &Path) -> HashMap<PathBuf, String> {
         {
             let workdir = fs::canonicalize(workdir).unwrap_or_else(|_| workdir.to_path_buf());
             for entry in repo_statuses.iter() {
-                if let Some(path_str) = entry.path() {
+                if let Ok(path_str) = entry.path() {
                     let full_path = workdir.join(path_str);
                     let status_str = get_status_char(entry.status());
                     statuses.insert(full_path, status_str.to_string());

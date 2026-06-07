@@ -1,6 +1,9 @@
 mod args;
 mod display;
 
+#[cfg(debug_assertions)]
+mod gencomp;
+
 use args::{Args, Format};
 use clap::Parser;
 use lis::entry::{Entry, sort_entries};
@@ -9,6 +12,12 @@ use lscolors::LsColors;
 fn main() {
     let args = Args::parse();
     let lscolors = LsColors::from_env().unwrap_or_default();
+
+    #[cfg(debug_assertions)]
+    if args.completions {
+        gencomp::generate(std::path::Path::new("assets/completions"))
+    }
+
 
     let mut entries = lis::LisBuilder::new()
         .recursive(args.recursive)
@@ -25,9 +34,9 @@ fn output_entries(entries: &[Entry], args: &Args, lscolors: &LsColors) {
     match args.format {
         Format::Plain => {
             if args.long {
-                display::print_long(entries, lscolors, args.icon);
+                display::print_long(entries, lscolors, args.icon, args.quote);
             } else {
-                display::print_plain(entries, lscolors, args.icon);
+                display::print_plain(entries, lscolors, args.icon, args.quote);
             }
         }
         Format::Csv => print_csv(entries),

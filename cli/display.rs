@@ -4,10 +4,10 @@ use lscolors::LsColors;
 use terminal_size::{Width, terminal_size};
 use unicode_width::UnicodeWidthStr;
 
-pub fn print_plain(entries: &[Entry], lscolors: &LsColors, show_icon: bool) {
+pub fn print_plain(entries: &[Entry], lscolors: &LsColors, show_icon: bool, quote: bool) {
     use std::io::IsTerminal;
     if !std::io::stdout().is_terminal() {
-        print_one_column(entries);
+        print_one_column(entries, quote);
         return;
     }
 
@@ -21,12 +21,20 @@ pub fn print_plain(entries: &[Entry], lscolors: &LsColors, show_icon: bool) {
         .unwrap_or(80);
     let max_width = get_max_width(entries, show_icon);
 
-    print_columns(&names, max_width, term_width);
+    print_columns(&names, max_width, term_width, quote);
 }
 
-fn print_one_column(entries: &[Entry]) {
+fn escape_double_quote(name: &str) -> String {
+    name.replace("\"", "\\\"")
+}
+
+fn print_one_column(entries: &[Entry], quote: bool) {
     for entry in entries {
-        println!("{}", entry.name);
+        if quote {
+            println!("\"{}\"", escape_double_quote(&entry.name));
+        } else {
+            println!("{}", entry.name);
+        }
     }
 }
 
@@ -52,14 +60,14 @@ fn get_max_width(entries: &[Entry], show_icon: bool) -> usize {
         .iter()
         .map(|e| {
             let icon_width = if show_icon { 3 } else { 0 };
-            UnicodeWidthStr::width(e.name.as_str()) + icon_width
+            UnicodeWidthStr::width(e.name.as_str()) + icon_width + 3
         })
         .max()
         .unwrap_or(0)
         + 2
 }
 
-fn print_columns(names: &[String], max_width: usize, term_width: usize) {
+fn print_columns(names: &[String], max_width: usize, term_width: usize, quote: bool) {
     let cols = (term_width / max_width).max(1);
     let rows = (names.len() as f64 / cols as f64).ceil() as usize;
 
@@ -68,7 +76,11 @@ fn print_columns(names: &[String], max_width: usize, term_width: usize) {
             let i = c * rows + r;
             if i < names.len() {
                 let pad = max_width.saturating_sub(visible_width(&names[i]));
-                print!("{}{}", names[i], " ".repeat(pad));
+                if quote {
+                    print!("\"{}\"{}", escape_double_quote(&names[i]), " ".repeat(pad));
+                } else {
+                    print!("{}{}", names[i], " ".repeat(pad));
+                }
             }
         }
         println!();
@@ -95,10 +107,15 @@ fn visible_width(s: &str) -> usize {
     UnicodeWidthStr::width(plain.as_str())
 }
 
-pub fn print_long(entries: &[Entry], lscolors: &LsColors, show_icon: bool) {
+pub fn print_long(entries: &[Entry], lscolors: &LsColors, show_icon: bool, quote: bool) {
     for e in entries {
         let size_str = format_size(e.size, DECIMAL);
         let name_str = style_entry_name(e, lscolors, show_icon);
+        let name_str = if quote {
+            format!("\"{}\"", escape_double_quote(&name_str))
+        } else {
+            name_str
+        };
 
         println!(
             "{} {:>3} {:<8} {:<8} {:>8} {} {} {}",
@@ -160,7 +177,7 @@ mod tests {
                 extension: "".to_string(),
             }
         ];
-        print_one_column(&entries);
+        print_one_column(&entries, false);
     }
 
     #[test]
@@ -181,7 +198,7 @@ mod tests {
                 extension: "".to_string(),
             }
         ];
-        print_long(&entries, &lscolors, false);
+        print_long(&entries, &lscolors, false, false);
     }
 
     #[test]
@@ -210,8 +227,8 @@ mod tests {
     #[test]
     fn test_print_columns() {
         let names = vec!["a".to_string(), "b".to_string(), "c".to_string()];
-        print_columns(&names, 10, 80);
-        print_columns(&names, 10, 20); // Test narrow terminal
+        print_columns(&names, 10, 80, false);
+        print_columns(&names, 10, 20, false); // Test narrow terminal
     }
 
     #[test]
