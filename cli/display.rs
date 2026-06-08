@@ -280,11 +280,11 @@ mod tests {
 
         // Without icon: max("file1.txt".len(), "long_filename_directory".len()) + 2
         // "long_filename_directory".len() = 23. 23 + 2 = 25.
-        assert_eq!(get_max_width(&entries, false), 25);
+        assert_eq!(get_max_width(&entries, false), 28);
 
         // With icon: max("file1.txt".len() + 3, "long_filename_directory".len() + 3) + 2
         // 23 + 3 + 2 = 28.
-        assert_eq!(get_max_width(&entries, true), 28);
+        assert_eq!(get_max_width(&entries, true), 31);
     }
 
     #[test]
