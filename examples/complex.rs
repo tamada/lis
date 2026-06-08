@@ -1,0 +1,23 @@
+use lis::entry::{SortBy, sort_entries};
+
+fn main() {
+    // Advanced usage: recursive, including all files, sorted by size descending
+    let mut entries = lis::LisBuilder::new()
+        .recursive(true)
+        .all(true)
+        .build(".")
+        .list();
+
+    // Sort by size, reverse
+    sort_entries(&mut entries, SortBy::Size, true);
+
+    println!("{:<10} {:>10} {:<20} Path", "Mode", "Size", "Modified");
+    println!("{:-<60}", "");
+
+    for entry in entries.iter().take(10) {
+        println!(
+            "{:<10} {:>10} {:<20} {}",
+            entry.mode, entry.size, entry.modified, entry.name
+        );
+    }
+}
