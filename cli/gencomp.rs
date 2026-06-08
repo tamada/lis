@@ -1,7 +1,7 @@
 use std::path::Path;
 
 #[cfg(debug_assertions)]
-mod gencomp {
+mod completions {
     use clap::{Command, CommandFactory};
     use clap_complete::Shell;
     use std::fs::File;
@@ -45,5 +45,5 @@ mod gencomp {
 #[allow(dead_code, unused_variables)]
 pub(crate) fn generate(outdir: &Path) {
     #[cfg(debug_assertions)]
-    gencomp::generate(outdir);
+    completions::generate(outdir);
 }
