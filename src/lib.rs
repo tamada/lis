@@ -166,7 +166,7 @@ impl Lis {
 
     /// Lists the entries in the directory according to the configured options.
     ///
-    /// Returns a vector of [`Entry`](crate::entry::Entry) objects.
+    /// Returns a vector of [`Entry`] objects.
     ///
     /// # Examples
     ///
