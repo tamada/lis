@@ -21,7 +21,7 @@ container-local:
         --build-arg GIT_REVISION={{git_revision}} \
         --build-arg BUILD_DATE={{build_date}} \
         --build-arg VERSION={{app_version}} \
-        -t tamada/lis:latest -t tamada/lis:{{ app_version }} \
+        -t ghcr.io/tamada/lis:latest -t ghcr.io/tamada/lis:{{ app_version }} \
         -f Containerfile \
         .
 
@@ -31,6 +31,6 @@ container:
         --build-arg GIT_REVISION={{git_revision}} \
         --build-arg BUILD_DATE={{build_date}} \
         --build-arg VERSION={{ app_version }} \
-        -t tamada/lis:latest -t tamada/lis:{{ app_version }} \
+        -t ghcr.io/tamada/lis:latest -t ghcr.io/tamada/lis:{{ app_version }} \
         -f Containerfile \
         .
