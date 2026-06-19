@@ -5,7 +5,6 @@
   class="scroll-smooth"
   data-default-appearance="light"
   data-auto-appearance="true"><head>
-	<meta name="generator" content="Hugo 0.161.1">
   <meta charset="utf-8">
   
     <meta http-equiv="content-language" content="en-us">
@@ -16,8 +15,8 @@
 
   
   
-    <title>lis</title>
-    <meta name="title" content="lis">
+    <title>Library Usage &middot; lis</title>
+    <meta name="title" content="Library Usage &middot; lis">
   
 
   
@@ -27,10 +26,7 @@
   
   
   
-  <link rel="canonical" href="https://tamada.github.io/lis/">
-  
-    
-      <link rel="alternate" type="application/rss+xml" href="/lis/index.xml" title="lis" />
+  <link rel="canonical" href="https://tamada.github.io/lis/library/">
   
 
   
@@ -38,21 +34,23 @@
   
 
   
-  <meta property="og:url" content="https://tamada.github.io/lis/">
+  <meta property="og:url" content="https://tamada.github.io/lis/library/">
   <meta property="og:site_name" content="lis">
-  <meta property="og:title" content="🐿️ lis -- Modern ls alternative">
-  <meta property="og:description" content="🗣️ Overview # lis is a modern, feature-rich directory listing tool written in Rust. It aims to provide a better alternative to ls with built-in support for Git status, icons, and multiple output formats.
-This product is an example project for learning Rust and the development process of open source software.
-lis provides a library and a CLI tool for listing directory entries with advanced features like Git status, icons, and multiple output formats.">
+  <meta property="og:title" content="Library Usage">
+  <meta property="og:description" content="📖 Library Usage # lis can be integrated as a library into your own Rust projects.
+🛠️ Basic Usage # To list entries in the current directory:
+use lis::Lis; use std::path::PathBuf; fn main() { let entries = Lis::new(PathBuf::from(&#34;.&#34;)).list(); for entry in entries { println!(&#34;{:&lt;10} {}&#34;, entry.mode, entry.name); } } 🏗️ Using LisBuilder # For more control over the listing behavior, use LisBuilder.">
   <meta property="og:locale" content="en_us">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2026-06-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-06-09T00:00:00+00:00">
 
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="🐿️ lis -- Modern ls alternative">
-  <meta name="twitter:description" content="🗣️ Overview # lis is a modern, feature-rich directory listing tool written in Rust. It aims to provide a better alternative to ls with built-in support for Git status, icons, and multiple output formats.
-This product is an example project for learning Rust and the development process of open source software.
-lis provides a library and a CLI tool for listing directory entries with advanced features like Git status, icons, and multiple output formats.">
+  <meta name="twitter:title" content="Library Usage">
+  <meta name="twitter:description" content="📖 Library Usage # lis can be integrated as a library into your own Rust projects.
+🛠️ Basic Usage # To list entries in the current directory:
+use lis::Lis; use std::path::PathBuf; fn main() { let entries = Lis::new(PathBuf::from(&#34;.&#34;)).list(); for entry in entries { println!(&#34;{:&lt;10} {}&#34;, entry.mode, entry.name); } } 🏗️ Using LisBuilder # For more control over the listing behavior, use LisBuilder.">
 
   
   
@@ -200,20 +198,41 @@ lis provides a library and a CLI tool for listing directory entries with advance
 
   
   <script type="application/ld+json">
-  {
+  [{
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": "https://tamada.github.io/lis/",
-    "name": "lis",
-    "description": "Minimal and alternative ls implementation in Rust.",
-    "inLanguage": "en-us",
-    "url": "https://tamada.github.io/lis/",
+    "@type": "Article",
+    "articleSection": "🐿️ lis -- Modern ls alternative",
+    "name": "Library Usage",
+    "headline": "Library Usage",
     
-    "publisher" : {
+    "inLanguage": "en-us",
+    "url" : "https://tamada.github.io/lis/library/",
+    "author" : {
       "@type": "Person",
       "name": ""
-    }
-  }
+    },
+    "copyrightYear": "2026",
+    "dateCreated": "2026-06-09T00:00:00\u002b00:00",
+    "datePublished": "2026-06-09T00:00:00\u002b00:00",
+    
+    "dateModified": "2026-06-09T00:00:00\u002b00:00",
+    
+    
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "148"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+        "@type": "ListItem",
+        "position":  1 ,
+        "name": "Library Usage",
+        "item": "https://tamada.github.io/lis/library/"
+      }
+    ]
+  }]
   </script>
 
 
@@ -616,92 +635,304 @@ lis provides a library and a CLI tool for listing directory entries with advance
       <main id="main-content" class="grow">
         
   
+  <article>
+    
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+        <ol class="text-sm text-neutral-500 dark:text-neutral-400 print:hidden">
   
-    <article class="max-w-full prose dark:prose-invert">
   
-    <header>
-      <h1>🐿️ lis -- Modern ls alternative</h1>
+    
+  
+  <li class="hidden">
+    <a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href="/lis/"
+      >🐿️ lis -- Modern ls alternative</a
+    ><span class="px-1 text-primary-500">/</span>
+  </li>
+
+  
+  <li class="hidden">
+    <a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href="/lis/library/"
+      >Library Usage</a
+    ><span class="px-1 text-primary-500">/</span>
+  </li>
+
+</ol>
+
+
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Library Usage
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-06-09T00:00:00&#43;00:00">2026-06-09</time><span class="px-2 text-primary-500">&middot;</span><span>148 words</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    </div>
+  
+
+  
+  
+
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+      
     </header>
-  
-  <section class="w-full">
-<h2 class="relative group">🗣️ Overview
-    <div id="-overview" class="anchor"></div>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          
+<h1 class="relative group">📖 Library Usage
+    <div id="-library-usage" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-overview" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-library-usage" aria-label="Anchor">#</a>
+    </span>
+    
+</h1>
+<p><code>lis</code> can be integrated as a library into your own Rust projects.</p>
+
+<h2 class="relative group">🛠️ Basic Usage
+    <div id="-basic-usage" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-basic-usage" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p><code>lis</code> is a modern, feature-rich directory listing tool written in Rust. It aims to provide a better alternative to <code>ls</code> with built-in support for Git status, icons, and multiple output formats.</p>
-<p>This product is an example project for learning Rust and the development process of open source software.</p>
-<p><code>lis</code> provides a library and a CLI tool for listing directory entries with advanced features like Git status, icons, and multiple output formats.</p>
+<p>To list entries in the current directory:</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> lis::Lis;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> std::path::PathBuf;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> entries <span style="color:#f92672">=</span> Lis::new(PathBuf::from(<span style="color:#e6db74">&#34;.&#34;</span>)).list();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> entry <span style="color:#66d9ef">in</span> entries {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">println!</span>(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{:&lt;10}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, entry.mode, entry.name);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div></div>
 
-<h2 class="relative group">🚀 Quick Start
-    <div id="-quick-start" class="anchor"></div>
+<h2 class="relative group">🏗️ Using LisBuilder
+    <div id="-using-lisbuilder" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-quick-start" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-using-lisbuilder" aria-label="Anchor">#</a>
     </span>
     
 </h2>
+<p>For more control over the listing behavior, use <code>LisBuilder</code>.</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> lis::LisBuilder;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> lis <span style="color:#f92672">=</span> LisBuilder::new()
+</span></span><span style="display:flex;"><span>        .all(<span style="color:#66d9ef">true</span>)       <span style="color:#75715e">// Include hidden files
+</span></span></span><span style="display:flex;"><span>        .recursive(<span style="color:#66d9ef">false</span>)
+</span></span><span style="display:flex;"><span>        .build(<span style="color:#e6db74">&#34;.&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> entries <span style="color:#f92672">=</span> lis.list();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> entry <span style="color:#66d9ef">in</span> entries {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">println!</span>(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, entry.name, entry.git_status);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div></div>
 
-<h3 class="relative group">Installation
-    <div id="installation" class="anchor"></div>
+<h2 class="relative group">📊 Advanced Sorting
+    <div id="-advanced-sorting" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#installation" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-advanced-sorting" aria-label="Anchor">#</a>
     </span>
     
-</h3>
+</h2>
+<p>You can also use the sorting utilities provided by the library.</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> lis::entry::{SortBy, sort_entries};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> entries <span style="color:#f92672">=</span> lis::LisBuilder::new()
+</span></span><span style="display:flex;"><span>        .recursive(<span style="color:#66d9ef">true</span>)
+</span></span><span style="display:flex;"><span>        .all(<span style="color:#66d9ef">true</span>)
+</span></span><span style="display:flex;"><span>        .build(<span style="color:#e6db74">&#34;.&#34;</span>)
+</span></span><span style="display:flex;"><span>        .list();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Sort by size, descending (reverse=true)
+</span></span></span><span style="display:flex;"><span>    sort_entries(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> entries, SortBy::Size, <span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> entry <span style="color:#66d9ef">in</span> entries.iter().take(<span style="color:#ae81ff">10</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">println!</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{:&lt;10}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{:&gt;10}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>            entry.mode, entry.size, entry.name
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div></div>
 
-<h4 class="relative group">🍺 Homebrew
-    <div id="-homebrew" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-homebrew" aria-label="Anchor">#</a>
-    </span>
-    
-</h4>
-<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>brew install tamada/tap/lis</span></span></code></pre></div></div>
+          
+          
+          
+        </div>
+        
+        
 
-<h4 class="relative group">💪 Compile myself
-    <div id="-compile-myself" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#-compile-myself" aria-label="Anchor">#</a>
-    </span>
-    
-</h4>
-<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/tamada/lis.git
-</span></span><span style="display:flex;"><span>cd lis
-</span></span><span style="display:flex;"><span>cargo build --release</span></span></code></pre></div></div>
+        
 
-<h3 class="relative group">Basic Usage
-    <div id="basic-usage" class="anchor"></div>
+        
+
+      </div>
+
+      
+      
+        
+        
+          
+          
+        
+        
+        
+        <script
+          type="text/javascript"
+          src="/lis/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
+          integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
+          data-oid="views_library.md"
+          data-oid-likes="likes_library.md"></script>
+      
+    </section>
+
     
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#basic-usage" aria-label="Anchor">#</a>
-    </span>
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
     
-</h3>
-<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>lis -l --icon</span></span></code></pre></div></div>
-<p>Check the <a href="/lis/cli/" >CLI Guide</a> for more details.</p>
-</section>
-</article>
-<section>
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span class="flex flex-col">
+          
+        </span>
+        <span class="flex flex-col items-end">
+          
+            <a
+              class="flex text-right text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/lis/features/">
+              <span class="leading-6">
+                Features&ensp;<span class="inline-block rtl:rotate-180">&rarr;</span>
+              </span>
+            </a>
+            
+              <span class="me-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2026-06-09T00:00:00&#43;00:00">2026-06-09</time>
+              </span>
+            
+          
+        </span>
+      </div>
+    </div>
   
 
 
-
-</section>
-
-  
+      
+    </footer>
+  </article>
 
         
 
