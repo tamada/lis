@@ -1,0 +1,49 @@
+
+using namespace System.Management.Automation
+using namespace System.Management.Automation.Language
+
+Register-ArgumentCompleter -Native -CommandName 'lis' -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+
+    $commandElements = $commandAst.CommandElements
+    $command = @(
+        'lis'
+        for ($i = 1; $i -lt $commandElements.Count; $i++) {
+            $element = $commandElements[$i]
+            if ($element -isnot [StringConstantExpressionAst] -or
+                $element.StringConstantType -ne [StringConstantType]::BareWord -or
+                $element.Value.StartsWith('-') -or
+                $element.Value -eq $wordToComplete) {
+                break
+        }
+        $element.Value
+    }) -join ';'
+
+    $completions = @(switch ($command) {
+        'lis' {
+            [CompletionResult]::new('--sort', '--sort', [CompletionResultType]::ParameterName, 'Sort by')
+            [CompletionResult]::new('--format', '--format', [CompletionResultType]::ParameterName, 'Output format')
+            [CompletionResult]::new('-r', '-r', [CompletionResultType]::ParameterName, 'Reverse sort order')
+            [CompletionResult]::new('--reverse', '--reverse', [CompletionResultType]::ParameterName, 'Reverse sort order')
+            [CompletionResult]::new('-l', '-l', [CompletionResultType]::ParameterName, 'Long format')
+            [CompletionResult]::new('--long', '--long', [CompletionResultType]::ParameterName, 'Long format')
+            [CompletionResult]::new('-a', '-a', [CompletionResultType]::ParameterName, 'All entries, respecting .gitignore')
+            [CompletionResult]::new('--all', '--all', [CompletionResultType]::ParameterName, 'All entries, respecting .gitignore')
+            [CompletionResult]::new('-A', '-A ', [CompletionResultType]::ParameterName, 'All entries, ignoring .gitignore')
+            [CompletionResult]::new('--whole-all', '--whole-all', [CompletionResultType]::ParameterName, 'All entries, ignoring .gitignore')
+            [CompletionResult]::new('--quote', '--quote', [CompletionResultType]::ParameterName, 'Quote the entries')
+            [CompletionResult]::new('--icon', '--icon', [CompletionResultType]::ParameterName, 'Display icons')
+            [CompletionResult]::new('-R', '-R ', [CompletionResultType]::ParameterName, 'Recursive listing')
+            [CompletionResult]::new('--recursive', '--recursive', [CompletionResultType]::ParameterName, 'Recursive listing')
+            [CompletionResult]::new('--completions', '--completions', [CompletionResultType]::ParameterName, 'Generate the completion script files for several shells')
+            [CompletionResult]::new('-h', '-h', [CompletionResultType]::ParameterName, 'Print help (see more with ''--help'')')
+            [CompletionResult]::new('--help', '--help', [CompletionResultType]::ParameterName, 'Print help (see more with ''--help'')')
+            [CompletionResult]::new('-V', '-V ', [CompletionResultType]::ParameterName, 'Print version')
+            [CompletionResult]::new('--version', '--version', [CompletionResultType]::ParameterName, 'Print version')
+            break
+        }
+    })
+
+    $completions.Where{ $_.CompletionText -like "$wordToComplete*" } |
+        Sort-Object -Property ListItemText
+}

@@ -1,0 +1,18 @@
+complete -c lis -l sort -d 'Sort by' -r -f -a "name\t'Sort by name (ascending)'
+time\t'Sort by last modification time (ascending)'
+size\t'Sort by size in bytes (ascending)'
+extension\t'Sort by file extension (ascending)'"
+complete -c lis -l format -d 'Output format' -r -f -a "plain\t''
+csv\t''
+json\t''
+yaml\t''"
+complete -c lis -s r -l reverse -d 'Reverse sort order'
+complete -c lis -s l -l long -d 'Long format'
+complete -c lis -s a -l all -d 'All entries, respecting .gitignore'
+complete -c lis -s A -l whole-all -d 'All entries, ignoring .gitignore'
+complete -c lis -l quote -d 'Quote the entries'
+complete -c lis -l icon -d 'Display icons'
+complete -c lis -s R -l recursive -d 'Recursive listing'
+complete -c lis -l completions -d 'Generate the completion script files for several shells'
+complete -c lis -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c lis -s V -l version -d 'Print version'

@@ -8,6 +8,9 @@ container_runner := "docker"
 test:
     cargo llvm-cov
 
+generate_demo: build
+    PATH=target/debug vhs .github/assets/demo.tape
+
 docs:
     cargo llvm-cov --html
     cd docs && {{ container_runner }} run -it --rm hugomods/hugo:0.163.0

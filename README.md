@@ -11,6 +11,8 @@
 This product is an example project for learning Rust and the development process of open source software.
 It is not intended for production use.
 
+![demo](.github/assets/demo.gif)
+
 ## 🗣️ Overview
 
 `lis` provides a library and a CLI tool for listing directory entries with advanced features like Git status, icons, and multiple output formats.

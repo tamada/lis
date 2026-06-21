@@ -1,0 +1,43 @@
+
+use builtin;
+use str;
+
+set edit:completion:arg-completer[lis] = {|@words|
+    fn spaces {|n|
+        builtin:repeat $n ' ' | str:join ''
+    }
+    fn cand {|text desc|
+        edit:complex-candidate $text &display=$text' '(spaces (- 14 (wcswidth $text)))$desc
+    }
+    var command = 'lis'
+    for word $words[1..-1] {
+        if (str:has-prefix $word '-') {
+            break
+        }
+        set command = $command';'$word
+    }
+    var completions = [
+        &'lis'= {
+            cand --sort 'Sort by'
+            cand --format 'Output format'
+            cand -r 'Reverse sort order'
+            cand --reverse 'Reverse sort order'
+            cand -l 'Long format'
+            cand --long 'Long format'
+            cand -a 'All entries, respecting .gitignore'
+            cand --all 'All entries, respecting .gitignore'
+            cand -A 'All entries, ignoring .gitignore'
+            cand --whole-all 'All entries, ignoring .gitignore'
+            cand --quote 'Quote the entries'
+            cand --icon 'Display icons'
+            cand -R 'Recursive listing'
+            cand --recursive 'Recursive listing'
+            cand --completions 'Generate the completion script files for several shells'
+            cand -h 'Print help (see more with ''--help'')'
+            cand --help 'Print help (see more with ''--help'')'
+            cand -V 'Print version'
+            cand --version 'Print version'
+        }
+    ]
+    $completions[$command]
+}
