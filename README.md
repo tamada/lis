@@ -4,14 +4,12 @@
 [![Coverage Status](https://coveralls.io/repos/github/tamada/lis/badge.svg?branch=main)](https://coveralls.io/github/tamada/lis?branch=main)
 
 [![CC-0](https://img.shields.io/badge/License-CC--0-blue.svg)](https://github.com/tamada/lis/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.0.11-blue.svg)](https://github.com/tamada/lis/releases/tag/v0.0.11)
+[![Version](https://img.shields.io/badge/Version-0.0.12-blue.svg)](https://github.com/tamada/lis/releases/tag/v0.0.12)
 [![DOI](https://zenodo.org/badge/1206549651.svg)](https://doi.org/10.5281/zenodo.19938406)
 
 `lis` is a modern, feature-rich directory listing tool written in Rust. It aims to provide a better alternative to `ls` with built-in support for Git status, icons, and multiple output formats.
 This product is an example project for learning Rust and the development process of open source software.
 It is not intended for production use.
-
-![demo](.github/assets/demo.gif)
 
 ## 🗣️ Overview
 
