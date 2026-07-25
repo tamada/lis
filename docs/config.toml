@@ -2,11 +2,11 @@ baseURL = "https://tamada.github.io/lis"
 languageCode = "en-us"
 defaultContentLanguage = "en"
 title = "lis"
-googleAnalytics = ""
 theme = ["github.com/tamada/hugo_theme_mod", "github.com/nunocoracao/blowfish/v2"]
+googleAnalytics = "G-9MC82DVGRD"
 
 [params]
-logo = "images/squirrel.png" # assets からの相対パス。
+logo = "squirrel.png" # assets からの相対パス。
 description = "Minimal and alternative ls implementation in Rust."
 dateFormat = "2006-01-02"
 copyright = "Copyright &copy; 2026 by Haruaki Tamada. Made with [Hugo](https://gohugo.io/). Deployed to [GitHub Pages](https://pages.github.com/)."

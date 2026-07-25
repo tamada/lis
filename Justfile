@@ -3,6 +3,10 @@ git_revision := `git rev-parse --short HEAD`
 app_version := `awk -F'"' '/^\[package\]/{p=1} p && /^version *=/{print $2; exit}' Cargo.toml`
 build_date := `date -u +%Y-%m-%dT%H:%M:%SZ`
 
+image_quay   := 'quay.io/tama5'
+image_github := 'ghcr.io/tamada'
+container_image := image_quay
+
 container_runner := "docker"
 
 test:
@@ -24,7 +28,7 @@ container-local:
         --build-arg GIT_REVISION={{git_revision}} \
         --build-arg BUILD_DATE={{build_date}} \
         --build-arg VERSION={{app_version}} \
-        -t ghcr.io/tamada/lis:latest -t ghcr.io/tamada/lis:{{ app_version }} \
+        -t {{container_image}}/lis:latest -t {{container_image}}/lis:{{ app_version }} \
         -f Containerfile \
         .
 
@@ -34,6 +38,6 @@ container:
         --build-arg GIT_REVISION={{git_revision}} \
         --build-arg BUILD_DATE={{build_date}} \
         --build-arg VERSION={{ app_version }} \
-        -t ghcr.io/tamada/lis:latest -t ghcr.io/tamada/lis:{{ app_version }} \
+        -t {{container_image}}/lis:latest -t {{container_image}}/lis:{{ app_version }} \
         -f Containerfile \
         .
